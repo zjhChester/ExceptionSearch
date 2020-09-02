@@ -43,7 +43,7 @@
     <version>1.0-SNAPSHOT</version>
     <properties>
         <spring.version>5.0.17.RELEASE</spring.version>
-        <tomcat.version>8.5.51</tomcat.version>
+        <tomcat.version>8.5.55</tomcat.version>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
@@ -76,11 +76,11 @@
             <version>${spring.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
-        <!--<dependency>-->
-            <!--<groupId>com.zaxxer</groupId>-->
-            <!--<artifactId>HikariCP</artifactId>-->
-            <!--<version>2.7.9</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.7.9</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
         <dependency>
