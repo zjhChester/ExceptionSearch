@@ -41,7 +41,7 @@ public class DateUtils {
         return time;
     }
 
-    public static void main(String[] args) {
-        System.out.println(DigestUtils.sha1Hex(DigestUtils.md5Hex("123")));
-    }
+//    public static void main(String[] args) {
+//        System.out.println(DigestUtils.sha1Hex(DigestUtils.md5Hex("123")));
+//    }
 }

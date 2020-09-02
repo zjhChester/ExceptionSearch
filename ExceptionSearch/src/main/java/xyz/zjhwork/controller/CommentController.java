@@ -1,5 +1,7 @@
 package xyz.zjhwork.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +16,12 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
+@Api(tags = "Comment Service Interfaces")
 public class CommentController {
     @Autowired
     private OtherService otherService;
     //添加评论
+    @ApiOperation(value = "添加评论接口", notes = "添加对该文章的评论信息，权限控制")
     @ResponseBody
     @PostMapping("/insertComment")
     public int insertComment(Integer id, String content, HttpServletRequest request){
@@ -41,6 +45,7 @@ public class CommentController {
 
     //查询博文的评论 //不需要走拦截器
     @ResponseBody
+    @ApiOperation(value = "查询评论接口", notes = "查询该文章的评论接口")
     @GetMapping("/findComment")
     public List<Comment> findComment(Integer id){
         if(id!=0){

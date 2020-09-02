@@ -1,0 +1,9 @@
+tomcat:
+  context-path: /
+#  doc-base: /usr/local/project/tomcatDoc
+  doc-base: C://test/
+  port: 9001
+
+
+
+

@@ -2,6 +2,7 @@ package xyz.zjhwork.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import xyz.zjhwork.aop.interfaces.AddViewsCount;
 import xyz.zjhwork.dao.ExceptionDao;
 import xyz.zjhwork.entity.Exception;
 import xyz.zjhwork.service.ExceptionService;
@@ -31,10 +32,7 @@ public class ExceptionServiceImpl implements ExceptionService {
         return exceptionDao.updateException(e);
     }
 
-    @Override
-    public int deleteException(Exception e) {
-        return exceptionDao.deleteException(e);
-    }
+
 
     /**
      * 核心业务
@@ -94,7 +92,7 @@ public class ExceptionServiceImpl implements ExceptionService {
     }
 
     @Override
-    public List<Integer> searchAssociation(List<String> keywords) {
+    public List<Exception> searchAssociation(List<String> keywords) {
         return exceptionDao.searchAssociation(keywords);
 
     }
@@ -117,4 +115,11 @@ public class ExceptionServiceImpl implements ExceptionService {
     public Exception findExceptionById(int id) {
         return exceptionDao.findExceptionById(id);
     }
+
+    @Override
+    public int delException(Integer id) {
+        return exceptionDao.delException(id);
+    }
+
+
 }

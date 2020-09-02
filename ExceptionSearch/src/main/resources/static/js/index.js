@@ -1,7 +1,7 @@
 function toResultPage(e) {
     window.sessionStorage.removeItem("keywords");
     window.sessionStorage.setItem("keywords",e.lastChild.innerHTML);
-    location.href="result.html";
+    location.href="result.html?keywords="+e.lastChild.innerHTML;
 }
 
 /* 搜索 */
@@ -59,7 +59,7 @@ var exceptionSearch={
                 },100);
             }
         });
-      
+
         /* 搜索 输入框 点击*/
         this.els.input.click(function () {
             if(!$(this).val()){
@@ -73,11 +73,11 @@ var exceptionSearch={
             if($(this).val()){
 
                 $.ajax({
-                    url:"/searchAssociation",
+                    url:"searchAssociation",
                     type:"GET",
                     data:{"keywords":$(this).val()},
                     success:function (res) {
-                        _this.hot.list = JSON.parse(res);
+                        _this.hot.list = res;
                     }
                 })
                 setSearchList();
@@ -87,7 +87,7 @@ var exceptionSearch={
         /* 搜索按钮 */
         this.els.button.click(function () {
             var keywords = $("#search-input").val();
-            location.href = "result.html";
+            location.href = "result.html?keywords="+keywords;
             window.sessionStorage.setItem("keywords",keywords);
         });
         /* 文档 */

@@ -11,6 +11,7 @@
 		<script src="js/util.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/md5.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/axios.js"></script>
         <style>
 			*{
 				padding: 0;
@@ -36,7 +37,7 @@
 			</div>
     	</div>
 				<hr>
-				<div class="col-xs-12">
+				<div class="row">
 					<div class="form-inline text-center text-warning">
 						<span>标题：</span>
 						<input class="form-control" type="text"  name="title" value="" />
@@ -55,6 +56,10 @@
 						<div class="col-xs-12">
 							<textarea id="oriContent" style="padding: 2%;width:100%;" onkeyup="convert()"></textarea>
 						</div>
+						<div class="text-center">
+							<button type="button" class="btn btn-danger refreshBtn" >清除编辑区</button>
+						</div>
+
 					</div>
 					<!--<-&#45;&#45;设置展示的div添加id-!>-->
 					<div class="col-xs-6 ">
@@ -66,11 +71,12 @@
 						<div class="col-xs-12">
 							<div style="width: 100%;overflow-x: scroll;" id="result" ></div>
 						</div>
+						<div class=" text-center">
+							<button type="button" class="btn btn-primary submitBtn" style="width: 80px; text-align: center;">发布</button>
+						</div>
 					</div>
 				</div>
-				<div class="col-xs-12 text-center">
-					<button type="button" class="btn btn-primary submitBtn" style="width: 80px; text-align: center;">发布</button>
-				</div>
+
 		<!--加载框-->
 		<div class="load">
 			<div class="loader" title="2">
@@ -127,7 +133,34 @@
 		</div>
 				<!--<&#45;&#45;写转化函数&#45;&#45;!>-->
 				<script type="text/javascript">
+					var initContent = "# 示例输入\n" +
+                        "## 学习目标：\n" +
+                        "<font color=#999AAA >提示：这里可以添加学习目标\n" +
+                        ">例如：\n" +
+                        "\n" +
+                        "1、 搭建 Java 开发环境\n" +
+                        "2、 掌握 Java 基本语法\n" +
+                        "3、 掌握条件语句 \n" +
+                        "4、 掌握循环语句\n" +
+                        "\n" +
+                        "## 学习内容：  \n" +
+                        "姓名|技能|排行\n" +
+                        "--|:--:|--:\n" +
+                        "刘备|哭|大哥\n" +
+                        "关羽|打|二哥\n" +
+                        "张飞|骂|三弟\n" +
+                        "\n" +
+                        "```java\n" +
+                        "public static void main(String[] args){\n" +
+                        "System.out.println(\"11111\");\n" +
+                        "}\n" +
+                        "```\n" +
+                        "## 这是两张图片  \n" +
+                        "<img src='http://img.zjhwork.xyz/logo.png' width='20%'> \n" +
+                        "![这里是图片唯一id，随便输只要不重复](http://img.zjhwork.xyz/logo.png)";
+
 					$(function(){
+
 					    //初始化隐藏模态框
 					    $(".load").hide()
                         $(".load-msg").html("请稍后...")
@@ -137,6 +170,9 @@
 
                         //检查登录状态
                         createMarkdownUserStatus()
+						//提示初始化
+						$("#oriContent").html(initContent)
+						convert()
 					})
 					function convert() {
 						var text = document.getElementById("oriContent").value;
@@ -146,7 +182,11 @@
 						var html = converter.makeHtml(text);
 						document.getElementById("result").innerHTML = html;
 					}
-
+					//清空编辑区
+					$(".refreshBtn").click(function () {
+						$("#oriContent").html("")
+                        convert()
+                    })
 
                     $(".submitBtn").click(function () {
                         createMarkdownUserStatus();
@@ -167,24 +207,28 @@
                             $("#oriContent").focus();
                             return;
                         }
-                        $.ajax({
-                            url:"/newException",
-                            type:"POST",
-                            data:{"title":title,"desc":desc,"type":type,"content":content},
-                            success:function (res) {
-                                var e = JSON.parse(res);
-                                if(e.code == 1){
-                                    //跳转去我的个人中心
-									location.href="user.html";
-                                    $(".load-msg").html("发表成功！请稍后")
-                                    //两秒后消失
-                                    $(".load").show().delay(2000).hide()
-                                }else{
-                                    alert("发表失败请重试");
-                                    //dom元素的值不用清空方便发起第二次提交
-                                }
-                            }
-                        })
+                        var exception = {title:title,desc:desc,type:type,content:content};
+                        axios({
+                            url: "newException",
+                            method: "POST",
+                            data:exception,
+                        }).then(response => {
+                            //如果请求成功，则进行页面初始化
+                            if (response.data.code != 0) {
+                            //跳转去当前文章的详情页
+                            location.href="markdownDetail.html?id="+response.data.code;
+                            $(".load-msg").html("发表成功！请稍后")
+                            //两秒后消失
+                            $(".load").show().delay(2000).hide()
+                        } else {
+                            alert("发表失败,因为："+response.data.desc);
+                            //dom元素的值不用清空方便发起第二次提交
+                        }
+                    })
+                    .catch((error) => {
+                            alert("发表失败,因为："+error);
+                        //dom元素的值不用清空方便发起第二次提交
+                    })
 
                     })
 

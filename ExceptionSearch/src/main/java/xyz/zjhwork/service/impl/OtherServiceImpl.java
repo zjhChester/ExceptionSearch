@@ -7,8 +7,11 @@ import xyz.zjhwork.dao.CommentDao;
 import xyz.zjhwork.dao.FavDao;
 import xyz.zjhwork.dao.HisDao;
 import xyz.zjhwork.entity.*;
+import xyz.zjhwork.entity.Exception;
 import xyz.zjhwork.service.OtherService;
+import xyz.zjhwork.utils.DateUtils;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -42,7 +45,7 @@ public class OtherServiceImpl implements OtherService {
     }
 
     @Override
-    public List<Favorite> findFavByUsername(String username) {
+    public List<Exception> findFavByUsername(String username) {
         return favDao.findFavByUsername(username);
     }
 
@@ -62,17 +65,35 @@ public class OtherServiceImpl implements OtherService {
     }
 
     @Override
-    public List<History> findHistoryByUsername(String username) {
+    public List<Exception> findHistoryByUsername(String username) {
         return hisDao.findHistoryByUsername(username);
     }
 
     @Override
     public int addHistory(History history) {
-        return hisDao.addHistory(history);
+        //添加前先检查是否已存在
+        Integer id = queryHistoryByUserIdAndExceptionId(history);
+        if(id!=null){
+        //
+            history.setTime(DateUtils.getFormat(new Date()));
+            return updateHistory(history);
+        }else{
+            return hisDao.addHistory(history);
+        }
     }
 
     @Override
     public int findApproCountByExceptionId(Integer id) {
         return aproveDao.findApproCountByExceptionId(id);
+    }
+
+    @Override
+    public Integer queryHistoryByUserIdAndExceptionId(History history) {
+        return hisDao.queryHistoryByUserIdAndExceptionId(history);
+    }
+
+    @Override
+    public int updateHistory(History history) {
+        return hisDao.updateHistory(history);
     }
 }

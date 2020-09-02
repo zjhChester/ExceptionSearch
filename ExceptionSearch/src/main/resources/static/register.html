@@ -91,14 +91,14 @@
                     return;
                 }else{
 					$.ajax({
-						url:"/isRegistered",
+						url:"isRegistered",
 						type:"GET",
 						data:{"username":username.val()},
 						success:function (res) {
 							if(res ==1 ){
 							    //可以注册
                                 $.ajax({
-                                    url:"/signIn",
+                                    url:"signIn",
                                     type:"GET",
                                     data:{"username":username.val(),"password":hex_md5(password.val()),"email":email.val()},
 									success:function (res) {

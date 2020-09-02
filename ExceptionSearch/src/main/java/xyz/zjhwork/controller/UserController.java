@@ -1,14 +1,12 @@
 package xyz.zjhwork.controller;
 
 
-import com.sun.istack.internal.NotNull;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import xyz.zjhwork.entity.User;
 import xyz.zjhwork.resmodel.ResponseModel;
 import xyz.zjhwork.resmodel.userResModel.UserResModel;
@@ -26,13 +24,15 @@ import java.util.Objects;
  * 2、用户信息维护
  */
 @Controller
+@Api(tags = "User Service Interfaces")
 public class UserController {
     @Autowired
     private UserService userService;
 
+    @ApiOperation(value = "登录接口", notes = "登录接口，进行登录请求前，需要对前端的密码进行MD5加密，否则会登录失败，当前版本使用的是session会话技术，如果是vue2.0+版本需要对返回的desc放在'Cookie:JSESSIONID='里面去，当成以后每一次权限控制接口的身份验证参数")
     @ResponseBody
-    @RequestMapping("/checkUser")
-    public ResponseModel checkUser(@NotNull String username, @NotNull String password, HttpServletRequest request) {
+    @PostMapping("/checkUser")
+    public ResponseModel checkUser( String username,  String password, HttpServletRequest request) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(Objects.nonNull(password)? DigestUtils.sha1Hex(password):"");
@@ -54,12 +54,13 @@ public class UserController {
                 userResModel.setCurrTime(System.currentTimeMillis());
                 userResModel.setUsername(username);
                 userResModels.add(userResModel);
-                return ResponseModel.successResModel(1,"SUCCESS",userResModels.toArray());
+                return ResponseModel.successResModel(1,request.getSession().getId(),userResModels.toArray());
 
                 default:
                     return ResponseModel.failResModel(0,"password error");
         }
     }
+    @ApiOperation(value = "用户退出接口",notes = "用户退出时调用的接口，啥都不需要传，权限控制")
     @ResponseBody
     @PostMapping("/userExit")
     public ResponseModel userExit(HttpServletRequest request){
@@ -67,15 +68,19 @@ public class UserController {
         return ResponseModel.successResModel(1,"logout success",null);
     }
 
+    @ApiOperation(value = "用户登录状态接口",notes = "进行初始化页面调用的用户是否登录的状态接口")
     @ResponseBody
     @GetMapping("/userStatus")
     public ResponseModel userStatus(HttpServletRequest request){
             List<UserResModel> userResModels = UserResModel.getUserResModels();
             UserResModel userResModel = UserResModel.getUserResModel();
             userResModel.setUsername(request.getSession().getAttribute("loginUser")+"");
+            userResModel.setCurrTime(System.currentTimeMillis());
             userResModels.add(userResModel);
             return ResponseModel.successResModel(1,"success",userResModels.toArray());
     }
+
+    @ApiOperation(value = "用户信息接口",notes = "展示用户信息的接口，权限控制")
     @ResponseBody
     @GetMapping("/userInfo")
     public User userInfo(HttpServletRequest request){
@@ -89,8 +94,9 @@ public class UserController {
         }
         return null;
     }
+    @ApiOperation(value = "用户信息更新接口",notes = "用户进行信息更新的接口，权限控制")
     @ResponseBody
-    @PostMapping("/userInfoUpdate")
+    @PutMapping("/userInfoUpdate")
     public int userInfoUpdate(String nickname,String password,String gender,String age,HttpServletRequest request){
         if(nickname!=null && password!= null && gender!=null && age!=null){
             User user = new User();
@@ -110,6 +116,7 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "判断用户是否已经注册接口",notes = "判断用户是否已经注册接口")
     @ResponseBody
     @GetMapping("/isRegistered")
     public int isRegistered(String username){
@@ -126,6 +133,7 @@ public class UserController {
           return 0;
       }
     }
+    @ApiOperation(value = "注册接口",notes = "注解用户的接口")
     @ResponseBody
     @GetMapping("/signIn")
     public int register(String username,String password,String email){

@@ -3,11 +3,11 @@
     function init(keywords,type) {
         $(".load").show()
         $.ajax({
-            url:"/searchCount",
+            url:"searchCount",
             type:"GET",
             data:{"keywords":keywords,"type":type},
             success:function (count) {
-                var searchCount = JSON.parse(count);
+                var searchCount = count;
                 //初始化页面 第一次加载第一页
                 search(type,keywords,1);
                 //加载搜索结果
@@ -38,13 +38,13 @@
     function search(type,keywords,page){
         $(".load-msg").html("正在加载，请稍后")
         $.ajax({
-            url:"/search",
+            url:"search",
             type:"GET",
             data:{"keywords":keywords,"type":type,"currPage":page},
             success:function(res){
                 //清空页面
                 $(".search-result").html("");
-                var e = JSON.parse(res);
+                var e = res;
 
                 //文字高亮   解决方案2  先把结果内容转小写 去匹配关键字的小写，匹配到了记录index,str.length 在原结果串取出来，再进行replace()
                //1、取出关键词的小写
@@ -88,7 +88,7 @@
                             "\t\t\t\t\t\t\t<a target='_blank'style='cursor: pointer' onclick='toDetailPage("+e.result[i].id+")' class=\"title\">"+title+"</a>\n" +
                             "\t\t\t\t\t\t</div>\n" +
                             "\t\t\t\t\t\t<div class=\"col-xs-4\">\n" +
-                            "\t\t\t\t\t\t\t<p class=\"type\">类型："+type+"</p>\n" +
+                            "\t\t\t\t\t\t\t<p class=\"type\">类型："+type+"</p><p class=\"views\">访问量："+views+"</p>\n" +
                             "\t\t\t\t\t\t</div>\n" +
                             "\t\t\t\t\t\t<hr style=\"border: none;\">\n" +
                             "\t\t\t\t\t\t<div class=\"col-xs-12 \" style=\"font-size: 1.1em; width:80%;margin-bottom: 10%;border-bottom: #adadad  solid 0.5px\">\n" +
@@ -109,12 +109,12 @@
     //登录状态
     function userStatus() {
         $.ajax({
-            url:"/userStatus",
+            url:"userStatus",
             type:"GET",
             success:function (res) {
-                var e = JSON.parse(res);
+                var e = res;
                 if(e.code == 1){
-                    $(".user").html("<a style='margin-right: 2%' href='user.html'>"+JSON.parse(res).result[0].username+"</a>")
+                    $(".user").html("<a style='margin-right: 2%' href='user.html'>"+res.result[0].username+"</a>")
                     $(".user").append("<button  type=\"button\" class=\"btn btn-default exitBtn\" data-toggle=\"modal\"  onclick=\"exit()\" data-target=\".myModalLogout\">退出登录</button>\n")
                     $(".user").append("\t\t\t\t<a href=\"user.html\"><button class=\"btn btn-info\">个人中心</button></a>\n")
                 }else{
@@ -137,19 +137,19 @@
             } else {
                 //发起登陆请求
                 $.ajax({
-                    url: "/checkUser",
+                    url: "checkUser",
                     type: "POST",
                     data: {"username": $("input[name='username']").val(), "password": hex_md5($("input[name='password']").val())},
                     success: function (res) {
                         $("input[name='username']").val("");
                         $("input[name='password']").val("");
-                        if (JSON.parse(res).code == 1) {
-                            $(".user").html("<a  style='margin-right: 2%' href='user.html'>"+JSON.parse(res).result[0].username+"</a>")
+                        if (res.code == 1) {
+                            $(".user").html("<a  style='margin-right: 2%' href='user.html'>"+res.result[0].username+"</a>")
                             $(".user").append("<button  type=\"button\" class=\"btn btn-default \"data-toggle=\"modal\" onclick=\"exit()\" data-target=\".myModalLogout\">退出登录</button>\n")
                             $(".user").append("\t\t\t\t<a href=\"user.html\"><button class=\"btn btn-info\">个人中心</button></a>\n")
                             $("#cancelLogin").click();
                         }else{
-                            alert("登陆失败，原因："+JSON.parse(res).desc)
+                            alert("登陆失败，原因："+res.desc)
                         }
                     }
                 })
@@ -160,10 +160,10 @@
         //执行函数
         $("#myModal_enter").click(function() {
             $.ajax({
-                url: "/userExit",
+                url: "userExit",
                 type: "POST",
                 success: function (res) {
-                    if (JSON.parse(res).code == 1) {
+                    if (res.code == 1) {
                         $(".user").html("<button  type=\"button\" class=\"btn btn-default \" data-toggle=\"modal\"onclick=\"login()\" data-target=\".myModalLogin\">登录</button>\n");
                         $("#cancelExit").click();
                         if(createMarkdownUserStatus != undefined){
@@ -179,28 +179,31 @@
     }
     //详情页
     function toDetailPage(e) {
-        window.sessionStorage.removeItem("id");
-        window.sessionStorage.setItem("id",e);
+        // window.sessionStorage.removeItem("id");
+        // window.sessionStorage.setItem("id",e);
 
-        window.open("markdownDetail.html","_blank");
+        window.open("markdownDetail.html?id="+e,"_blank");
     }
     function loadException(id){
         $.ajax({
-            url:"/getException",
+            url:"exception/"+id,
             type:"GET",
-            data:{"id":id},
             success:function(res){
-                var e = JSON.parse(res);
+                var e = res;
                 if(e.code == 1){
+                    $("title").html(e.result[0].title)
+                    $(".keywords").html(e.result[0].title)
                     $("#title").html(e.result[0].title);
                     $("#author").html("作者："+e.result[0].author);
                     $("#type").html("标签："+e.result[0].type);
+                    $(".viewsTab").html("views:"+e.result[0].views)
                     convert(e.result[0].content);
                     //加载结束
                     $(".load").hide()
                 }else{
                     alert("没有当前博文哦！原因是:"+e.desc)
                     $(".load").hide()
+                    window.location.href="index.html";
                 }
             }
         })
@@ -215,10 +218,10 @@
     function createMarkdownUserStatus() {
         $(".load").show()
         $.ajax({
-            url:"/userStatus",
+            url:"userStatus",
             type:"GET",
             success:function (res) {
-                var e = JSON.parse(res);
+                var e = res;
                 if(e.code == 0){
                     alert("还未登陆，请先登录哦！")
                     location.href="index.html"
@@ -245,11 +248,11 @@
                 if(res == 1){
                     //已经收藏了  点击是取消收藏
                     $(".favoriteBtn").html("已收藏");
-                    $(".favoriteBtn").attr("onclick","favoriteCancel("+window.sessionStorage.getItem("id")+")")
+                    $(".favoriteBtn").attr("onclick","favoriteCancel("+location.href.toString().substr(location.href.indexOf("?")+1).split("=")[1]+")")
                 }else{
                     //没收藏 点击是添加收藏
                     $(".favoriteBtn").html("收藏该文");
-                    $(".favoriteBtn").attr("onclick","addFavorite("+window.sessionStorage.getItem("id")+")")
+                    $(".favoriteBtn").attr("onclick","addFavorite("+location.href.toString().substr(location.href.indexOf("?")+1).split("=")[1]+")")
                 }
             }
         })
@@ -257,7 +260,7 @@
     //收藏
     function addFavorite(id) {
         $.ajax({
-            url: "/addFavByUsernameAndExceptionId",
+            url: "addFavByUsernameAndExceptionId",
             type:"POST",
             data:{"id":id},
             success:function (res) {
@@ -276,7 +279,7 @@
     //取消收藏
     function favoriteCancel(id) {
         $.ajax({
-            url: "/deleteFavFromFavByUsernameAndExceptionId",
+            url: "deleteFavFromFavByUsernameAndExceptionId",
             type:"POST",
             data:{"id":id},
             success:function (res) {
@@ -295,12 +298,12 @@
     //查询本文有多少赞
     function approveCount(id) {
         $.ajax({
-            url: "/findApproCountByExceptionId",
+            url: "findApproCountByExceptionId",
             type: "GET",
             data: {"id": id},
             success: function (res) {
                 //初始化
-                $(".ApproveBtn").html("👍");
+                $(".ApproveBtn").html("❤");
                 $(".ApproveBtn").append(res);
             }
         })
@@ -309,7 +312,7 @@
     //检查赞赏状态
     function approveStatus(id) {
         $.ajax({
-            url: "/isAproByUsernameAndExceptionId",
+            url: "isAproByUsernameAndExceptionId",
             type: "GET",
             data: {"id": id},
             success: function (res) {
@@ -319,6 +322,7 @@
                 }
             }
         })
+        approveCount(id)
     }
 
 //添加赞
@@ -351,11 +355,11 @@
         //初始化dom
         $(".comment_list").html("")
         $.ajax({
-            url: "/findComment",
+            url: "findComment",
             type:"GET",
             data:{"id":id},
             success: function (res) {
-                var e = JSON.parse(res);
+                var e = res;
                 if(e.length == 0){
                     $(".comment_list").html("<div class='text-center bg-warning' style='font-weight: 800;'>本文还没有评论哦！~</div>")
                 }else{
@@ -383,12 +387,12 @@
 
 //添加评论
     function addComments(id) {
-        if($("#commentContent").val() == ""){
+        if($("#commentContent").val().trim() == ""){
             $("#commentContent").focus();
             return;
         }else{
             $.ajax({
-                url: "/insertComment",
+                url: "insertComment",
                 type:"POST",
                 data:{"id":id,"content":$("#commentContent").val()},
                 success:function (res) {
@@ -410,10 +414,10 @@
     function newListLoading() {
         $(".load").show()
         $.ajax({
-            url:"/newListException",
+            url:"newListException",
             type:"GET",
             success:function (res) {
-                var e = JSON.parse(res);
+                var e = res;
                 $(".newList ul").html("");
                 for (var i = 0; i <e.length ; i++) {
                     $(".newList ul").append("<li><a style='cursor: pointer;width: 120px;overflow: hidden' onclick='toDetailPage("+e[i].id+")'>"+e[i].title+"</a>- - - -<span>"+e[i].createTime+"</span></li>")
@@ -425,10 +429,10 @@
     function myListLoading() {
         $(".load").show()
         $.ajax({
-            url:"/myListException",
+            url:"myListException",
             type:"GET",
             success:function (res) {
-                var e = JSON.parse(res);
+                var e = res;
                 $(".myList ul").html("");
                 for (var i = 0; i <e.length ; i++) {
                     $(".myList ul").append("<li><a style='cursor: pointer;width: 120px;overflow: hidden' onclick='toDetailPage("+e[i].id+")'>"+e[i].title+"</a>- - - -<span>"+e[i].createTime+"</span></li>")
@@ -441,10 +445,10 @@
     function myFavoriteLoading() {
         $(".favoriteList ul").html("");
         $.ajax({
-            url: "/findFavByUsername",
+            url: "findFavByUsername",
             type: "GET",
             success:function (res) {
-                var e = JSON.parse(res);
+                var e = res;
                 if(e.length != 0){
                     //为空
                     for (var i = 0; i <e.length ; i++) {
@@ -461,10 +465,10 @@
     function historyLoading() {
         $(".historyList ul").html("");
         $.ajax({
-            url: "/findHistoryByUsername",
+            url: "findHistoryByUsername",
             type: "GET",
             success:function (res) {
-                var e = JSON.parse(res);
+                var e = res;
                 if(e.length != 0){	//为空
                     for (var i = 0; i <e.length ; i++) {
                         $(".historyList ul").append("<li><a style='cursor: pointer;width: 120px;overflow: hidden' onclick='toDetailPage("+e[i].id+")'>"+e[i].title+"</a></li>")
@@ -481,10 +485,10 @@
     function myInfo() {
         $(".load").show()
         $.ajax({
-            url: "/userInfo",
+            url: "userInfo",
             type: "GET",
             success: function (res) {
-                var e = JSON.parse(res);
+                var e = res;
                 $(".userInfo ul").html("")
                 $(".userInfo ul").append("<li><strong style='font-weight: 800'>账号：</strong>"+e.username+"</li>\n")
                 $(".userInfo ul").append("<li><strong style='font-weight: 800'>昵称：</strong>"+e.nickName+"</li>\n")
@@ -502,7 +506,7 @@
     }
     function enterUpdate() {
         var nickname = $("input[name='nickname']").val();
-        var password = $("input[name='nickname']").val();
+        var password = $("input[name='password']").val();
         var age = $(".age option:selected").val();
         var gender = $(".gender option:selected").val();
         if(nickname == "")
@@ -510,10 +514,10 @@
             $("input[name='nickname']").focus();
             return;
         }else if(password == ""){
-            $("input[name='nickname']").focus();
+            $("input[name='password']").focus();
         }else{
             $.ajax({
-                url:"/userInfoUpdate",
+                url:"userInfoUpdate",
                 type:"POST",
                 data:{"nickname":nickname,"password":hex_md5(password),"gender":gender,"age":age},
                 success:function (res) {

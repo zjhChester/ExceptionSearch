@@ -1,5 +1,7 @@
 package xyz.zjhwork.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +24,7 @@ import java.util.List;
 /**
  * 收藏的业务
  */
+@Api(tags = "Favorite Msg Service interfaces ")
 @Controller
 public class FavController {
     @Autowired
@@ -29,6 +32,7 @@ public class FavController {
     @Autowired
     private ExceptionService exceptionService;
     //查询当前文章自己是否收藏
+    @ApiOperation(value = "查询是否收藏接口", notes = "查询当前用户是否已经收藏，权限控制")
     @ResponseBody
     @GetMapping("/isFavByUsernameAndExceptionId")
     public int isFavByUsernameAndExceptionId(Integer id, HttpServletRequest request){
@@ -47,29 +51,15 @@ public class FavController {
         return 0;
     }
     //查询自己的收藏
+    @ApiOperation(value = "收藏文章列表接口", notes = "查询当前用户收藏文章列表接口，权限控制")
     @ResponseBody
     @GetMapping("/findFavByUsername")
     public List<Exception> findFavByUsername(HttpServletRequest request){
-        List<Favorite> favorites = otherService.findFavByUsername(request.getSession().getAttribute("loginUser").toString());
-        List<Exception> exceptions = new ArrayList<>();
-        for (Favorite f:
-             favorites) {
-            Exception exception = new Exception();
-            exception.setId(f.getExceptionId());
-            List<Exception> exceptions1 = exceptionService.findException(exception);
-            if(exceptions1.size()!=0){
-                exceptions.add(exceptions1.get(0));
-            }
-            for (Exception e:
-                 exceptions) {
-                if(e.getTitle().length()>=15){
-                    e.getTitle().substring(0,15);
-                }
-            }
-        }
+        List<Exception> exceptions = otherService.findFavByUsername(request.getSession().getAttribute("loginUser").toString());
         return exceptions;
     }
     //取消收藏
+    @ApiOperation(value = "取消收藏接口", notes = "取消当前用户对该文章的收藏")
     @ResponseBody
     @PostMapping("/deleteFavFromFavByUsernameAndExceptionId")
     public int deleteFavFromFavByUsernameAndExceptionId(Integer id, HttpServletRequest request){
@@ -87,6 +77,7 @@ public class FavController {
       return 0;
     }
     //添加收藏
+    @ApiOperation(value = "添加收藏接口", notes = "当前用户添加该文章为自己的收藏文章")
     @ResponseBody
     @PostMapping("/addFavByUsernameAndExceptionId")
     public int addFavByUsernameAndExceptionId(Integer id, HttpServletRequest request){

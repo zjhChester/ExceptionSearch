@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>修改文章</title>
+    <script type="text/javascript" src="js/showdown.min.js"></script>
+    <link rel="stylesheet" href="css/element.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link id="theme" rel="stylesheet" type="text/css" href="theme/engwrite.css"/>
+    <link rel="stylesheet" type="text/css" href="css/load.css"/>
+    <script src="js/vue.min.js"></script>
+    <!-- import JavaScript -->
+    <script crossorigin="anonymous" integrity="sha384-WbhdtWslh0AUD1Dhf8OExUvvjZ/VN6o2HHMsYlDXb6uf3IweMH13dGL4V/KgDc7y"
+            src="js/element.js"></script>
+    <script src="js/axios.js"></script>
+    <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/md5.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        pre {
+            padding: 1%;
+        }
+        body{
+            font-family: Georgia,Palatino, serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            /*background-color: #FCF5ED;*/
+            padding: 0px;
+            /*max-width: 960px;*/
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-loading="global_loading" element-loading-text="文章详情拼命加载中~"
+     element-loading-spinner="el-icon-loading">
+    <!-- headr -->
+    <el-menu default-active="" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+             style="box-shadow: #DDDDDD 0px 1px 0px;height:60px;">
+        <el-menu-item index="1">首页</el-menu-item>
+
+        <el-menu-item index="2">写文章</el-menu-item>
+        <el-menu-item index="3">个人中心</el-menu-item>
+        <el-submenu index="4" style="text-align: right;">
+            <template slot="title">{{account.nickname}}</template>
+            <!--<el-menu-item index="2-1" >信息修改</el-menu-item>-->
+            <el-menu-item index="2-2">退出登录</el-menu-item>
+        </el-submenu>
+    </el-menu>
+   <div class="body">
+       <div class="">
+           <div class="col-xs-12 text-warning text-center" style="height: 60px;">
+               <h1>文章编辑</h1>
+           </div>
+       </div>
+       <hr>
+       <div class="row">
+           <div class="form-inline text-center text-warning">
+               <span>标题：</span>
+               <input v-model="title" class="form-control" type="text" name="title" value=""/>
+               <span>描述：</span>
+               <input v-model="desc" class="form-control" type="text" name="desc" value=""/>
+               <span>类型：</span>
+               <input v-model="type" class="form-control" type="text" name="type" value=""/>
+           </div>
+           <hr style="border: none;">
+           <div class="col-xs-6 ">
+               <div class="col-xs-12 text-center ">
+                   <div class=" text-center bg-primary"
+                        style="height: 40px;line-height: 40px;letter-spacing: 2px;font-size: 1.5em;font-weight: 800;">
+                       <span>编辑区</span>
+                   </div>
+               </div>
+               <div class="col-xs-12">
+                   <textarea id="oriContent" style="padding: 2%;width:100%;"  v-model="oriContent" @input="convert" ></textarea>
+               </div>
+               <div class="text-center">
+                   <button type="button" class="btn btn-danger refreshBtn" @click="refreshBtn">清除编辑区</button>
+               </div>
+
+           </div>
+           <!--<-&#45;&#45;设置展示的div添加id-!>-->
+           <div class="col-xs-6 ">
+               <div class="col-xs-12 text-center ">
+                   <div id="" class=" text-center bg-primary"
+                        style="height: 40px;line-height: 40px;letter-spacing: 2px;font-size: 1.5em;font-weight: 800;">
+                       <span>预览区</span>
+                   </div>
+               </div>
+               <div class="col-xs-12">
+                   <div style="width: 100%;overflow-x: scroll;" id="result" ></div>
+               </div>
+               <div class=" text-center">
+                   <button type="button" @click="clickSubmitBtn" class="btn btn-primary submitBtn" style="width: 80px; text-align: center;">保存
+                   </button>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
+<!--<&#45;&#45;写转化函数&#45;&#45;!>-->
+<script type="text/javascript">
+    $(function () {
+        //初始化隐藏模态框
+        $(".load").hide()
+        $(".load-msg").html("请稍后...")
+        //自适应高度
+        $("#oriContent").css("height", window.innerHeight - 300)
+        $("#result").css("height", window.innerHeight - 300)
+
+        //检查登录状态
+        // createMarkdownUserStatus()
+        //提示初始化
+        // $("#oriContent").html(initContent)
+    })
+
+    /**
+     * part of vue.js
+     */
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                //框架参数
+                activeNames: ['1', '2', '3'],
+                //登录接口参数
+                url: '',
+                account: {
+                    username: '',
+                    nickname: '',
+                    gender: '',
+                    email: ''
+                },
+                exceptionId:"0",
+                oriContent:"",
+                title:"",
+                desc:"",
+                type:"",
+                global_loading:false
+            }
+        },
+        methods: {
+            refreshBtn(){
+                this.oriContent = "";
+                this.convert()
+            },
+            convert(){
+                // var text = document.getElementById("oriContent").value;
+                // var converter = new showdown.Converter({
+                //     tables: true
+                // });
+                // var html = converter.makeHtml(text);
+                // document.getElementById("result").innerHTML = html;
+                 var converter = new showdown.Converter({
+                    tables: true
+                 });
+                 $("#result").html(converter.makeHtml(this.oriContent));
+            },
+            //发布按钮点击
+            clickSubmitBtn(){
+                createMarkdownUserStatus();
+                var title = $("input[name = 'title']").val();
+                var type = $("input[name = 'type']").val();
+                var desc = $("input[name = 'desc']").val();
+                var content = $("#oriContent").val();
+                if (title == "") {
+                    this.$message.error("标题不能为空噢！")
+                    $("input[name = 'title']").focus();
+                    return;
+                } else if (type == "") {
+                    this.$message.error("类型不能为空噢！")
+                    $("input[name = 'type']").focus();
+                    return;
+                } else if (desc == "") {
+                    this.$message.error("描述不能为空噢！")
+                    $("input[name = 'desc']").focus();
+                    return;
+                } else if (content == "") {
+                    this.$message.error("内容不能为空噢！")
+                    $("#oriContent").focus();
+                    return;
+                }else{
+                    this.updateException()
+                }
+            },
+            //框架方法
+            handleSelect(key, keyPath) {
+                if (key == 1) {
+                    window.location.href = "index.html";
+                }
+                if (key == 2) {
+                    window.location.href = "createMarkdown.html";
+                }
+                if (key == 3) {
+                    window.location.href = "user.html";
+                }
+                if (key == "2-2") {
+                    this.$confirm('确认退出吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.checkUser();
+
+                }).catch(() => {
+
+                    });
+                }
+            },
+            handleChange(val) {
+            },
+            //退出登录请求
+            checkUser() {
+                axios({
+                    url: "userExit",
+                    method: "POST"
+                }).then(response => {
+                    if (response.data.code == 1) {
+                    this.$message.success("下线成功！")
+                    window.location.href = "index.html"
+                } else {
+                    this.$message.error("下线失败！")
+                }
+            })
+            .catch((error) => {
+                    this.$message.error(error)
+            })
+            },
+            //检查登录状态
+            createMarkdownUserStatus() {
+                axios({
+                    url: "userStatus",
+                    method: "GET"
+                }).then(response => {
+
+                    //如果已登录，则进行页面初始化
+                    if (response.data.code == 1) {
+                    //修改网页名
+                    this.exceptionId=location.href.toString().substr(location.href.indexOf("?")+1).split("=")[1]
+                    if(this.exceptionId==undefined){
+                        this.exceptionId = -1;
+                    }
+                    this.loadingExceptionInfo(this.exceptionId)
+                } else {
+                    this.global_loading = false;
+                    //如果未登录，跳转到index去
+                    window.location.href = "index.html";
+                }
+            })
+            .catch((error) => {
+                    this.global_loading = false;
+                    this.$message.error(error)
+            })
+            },
+            loadingExceptionInfo(id){
+                axios({
+                    url: "exception/exceptionByUserAndId/"+id,
+                    method: "GET"
+                }).then(response => {
+
+                    //如果请求成功，则进行页面初始化
+                    if (response.data.code == 1) {
+                    this.oriContent=response.data.result[0].content;
+                    this.convert()
+                    this.title=response.data.result[0].title;
+                    this.desc=response.data.result[0].desc;
+                    this.type=response.data.result[0].type;
+                    this.global_loading = false;
+                } else {
+                    this.$message.error("加载失败，因为："+response.data.desc)
+                    this.global_loading = false;
+                }
+            })
+            .catch((error) => {
+                    this.$message.error(error)
+                this.global_loading = false;
+            })
+            },
+            updateException(){
+                var exceptionInfo = {
+                    id:this.exceptionId,title:this.title,type:this.type,desc:this.desc,content:this.oriContent
+                };
+                axios({
+                    url:"exception/exceptionByUserAndId/"+this.exceptionId,
+                    data: exceptionInfo,
+                    method: "PUT"
+
+                }).then(response => {
+
+                    //如果修改成功，则跳转到user.html
+                    if (response.data.code == 1) {
+                    this.$message.success("修改成功！")
+                    this.loadingExceptionInfo(this.exceptionId)
+                    window.location.href = "user.html";
+                } else {
+                    this.$message.error("修改失败，因为："+response.data.desc)
+                }
+            })
+            .catch((error) => {
+                    this.$message.error(error)
+            })
+            }
+        },
+        //初始化
+        created: function () {
+            // //窗体高度自适应
+            // this.windowHeight = Number((window.innerHeight-60) / 2);
+            // this.bodyHeight = Number((window.innerHeight-100))
+            //页面初始化
+            this.global_loading = true;
+            this.createMarkdownUserStatus()
+
+        }
+    })
+</script>
+</body>
+</html>
+
