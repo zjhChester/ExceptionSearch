@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>xyz.zjhwork</groupId>
   <artifactId>ExceptionSearch</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>20200917</version>
   <build>
     <plugins>
       <plugin>
@@ -48,4 +48,8 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <properties>
+    <tomcat.version>8.5.56</tomcat.version>
+    <spring.version>5.2.6.RELEASE</spring.version>
+  </properties>
 </project>

@@ -41,7 +41,7 @@ public interface ExceptionDao {
     List<Exception> myListException(@Param("username") String username);
 
     //查询单个 通过id
-    @Select("select id,title,exception.desc,author,exception.type,createTime from exception where id =#{id}and delStatus=0")
+    @Select("select id,title,exception.desc,author,exception.type,createTime from exception where id =#{id} and delStatus=0 ")
     Exception findExceptionById(@Param("id") int id);
 
     //增加浏览数量
@@ -51,5 +51,9 @@ public interface ExceptionDao {
     //删除异常文章 逻辑删除delStatus字段改为1
     @Update("update exception set delStatus = 1 where id = #{id}")
     int delException(Integer id);
+
+    //根据传入的ids数组，输出list<Exception>
+    @Select("select id,createTime,author,content,title,exception.desc,exception.type from exception where id in (${ids})")
+    List<Exception> findListByIds(@Param("ids") String ids);
 
 }

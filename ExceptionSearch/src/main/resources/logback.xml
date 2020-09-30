@@ -116,11 +116,14 @@
         <!--<appender-ref ref="file.error" />-->
     <!--</logger>-->
     <logger name="org.apache.ibatis" level="info">
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="debug"/>
     </logger>
 
     <logger name="java.sql" level="info">
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="debug"/>
+    </logger>
+    <logger name="xyz.zjhwork.dao" level="debug" additivity="false">
+        <appender-ref ref="debug" />
     </logger>
     <!-- root将级别为${log.root.level}及大于${log.root.level}的日志信息交给已经配置好的名为“Console”的appender处理，“Console”appender将信息打印到Console,其它同理 -->
     <root level="info">
@@ -128,7 +131,18 @@
         <appender-ref ref="file.async.other" />
         <appender-ref ref="file.error" />
     </root>
-    <logger level="INFO" name="addViewLog">
+    <!--浏览日志-->
+       <logger level="INFO" name="addViewLog">
         <appender-ref ref="addViewLog"/>
     </logger>
+    <!--sql日志-->
+    <logger name="com.ibatis" level="DEBUG" />
+    <logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG" />
+    <logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG" />
+    <logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" />
+    <logger name="java.sql.Connection" level="DEBUG" />
+    <logger name="java.sql.Statement" level="DEBUG" />
+    <logger name="java.sql.PreparedStatement" level="DEBUG" />
+    <logger name="java.sql.ResultSet" level="DEBUG" />
+
 </configuration>

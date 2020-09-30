@@ -20,6 +20,9 @@
 		     pre {
 				 padding: 1%;
 		     }
+			#result::-webkit-scrollbar {
+				display: none
+			}
 		</style>
 	</head>
 	<body>
@@ -69,7 +72,7 @@
 							</div>
 						</div>
 						<div class="col-xs-12">
-							<div style="width: 100%;overflow-x: scroll;" id="result" ></div>
+							<div style="width: 100%;overflow-x: scroll;border: 1px solid #faffeb" id="result" ></div>
 						</div>
 						<div class=" text-center">
 							<button type="button" class="btn btn-primary submitBtn" style="width: 80px; text-align: center;">发布</button>
@@ -131,8 +134,14 @@
 				</div>
 			</div>
 		</div>
-				<!--<&#45;&#45;写转化函数&#45;&#45;!>-->
 				<script type="text/javascript">
+
+					//绑定滚动条
+					$("#oriContent").scroll(function () {
+					    //console.log("写入区",$("#oriContent").scrollTop(),$("#oriContent")[0].scrollHeight,$("#oriContent").scrollTop()/$("#oriContent")[0].scrollHeight*100+"%")
+                        //console.log("预览区",$("#result").scrollTop(),$("#result")[0].scrollHeight,$("#result").scrollTop()/$("#result")[0].scrollHeight*100+"%")
+						document.getElementById('result').scrollTop=($("#oriContent").scrollTop()*$("#result")[0].scrollHeight)/$("#oriContent")[0].scrollHeight ;
+                    })
 					var initContent = "# 示例输入\n" +
                         "## 学习目标：\n" +
                         "<font color=#999AAA >提示：这里可以添加学习目标\n" +
@@ -156,8 +165,9 @@
                         "}\n" +
                         "```\n" +
                         "## 这是两张图片  \n" +
-                        "<img src='http://img.zjhwork.xyz/logo.png' width='20%'> \n" +
-                        "![这里是图片唯一id，随便输只要不重复](http://img.zjhwork.xyz/logo.png)";
+                        "第一种(img标签,可点击)|第二种(原生markdown语法)\n" +
+                        ":--:|:--:\n" +
+                        "<a href='http://img.zjhwork.xyz/logo.png' target='_blank'><img src='http://img.zjhwork.xyz/logo.png'></a> |![这里是图片唯一id，随便输只要不重复](http://img.zjhwork.xyz/logo.png)";
 
 					$(function(){
 

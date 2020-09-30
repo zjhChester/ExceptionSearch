@@ -119,6 +119,9 @@
         // createMarkdownUserStatus()
         //提示初始化
         // $("#oriContent").html(initContent)
+        $("#oriContent").scroll(function () {
+            document.getElementById('result').scrollTop=($("#oriContent").scrollTop()*$("#result")[0].scrollHeight)/$("#oriContent")[0].scrollHeight ;
+        })
     })
 
     /**
@@ -298,7 +301,7 @@
                     if (response.data.code == 1) {
                     this.$message.success("修改成功！")
                     this.loadingExceptionInfo(this.exceptionId)
-                    window.location.href = "user.html";
+                    // window.location.href = "user.html";
                 } else {
                     this.$message.error("修改失败，因为："+response.data.desc)
                 }

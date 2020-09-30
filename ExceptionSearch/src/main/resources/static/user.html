@@ -82,7 +82,9 @@
                     <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-left:8%;margin:30px;">
                         <el-breadcrumb-item>个人中心</el-breadcrumb-item>
                         <el-breadcrumb-item>我的文章</el-breadcrumb-item>
+
                     </el-breadcrumb>
+                    <div style="text-align: right;padding-right: 10px;"><el-button plain style="" size="small" type="primary" @click="userMsgFileOutput" icon="el-icon-download">导出所有文章</el-button></div>
                     <el-timeline
                             :style="'max-height:'+ (windowHeight-100)+'px;overflow-y: scroll;min-height:'+ (windowHeight-130)+'px;border-right: lightgray 1px solid;padding-right: 20px;'">
                         <el-timeline-item :timestamp="item.createTime" placement="top"
@@ -266,6 +268,39 @@
 
             toUpdatePage(id){
               window.location.href="updatePage.html?id="+id
+            },
+            //个人文章导出
+            userMsgFileOutput(){
+                this.$confirm('确认导出所有文章吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    this.doFileOutput()
+            }).catch(() => {
+                });
+            },
+            //请求导出接口
+            doFileOutput(){
+                axios({
+                    url: "file/myfileoutput",
+                    method: "GET",
+                    responseType: 'blob'
+                }).then(response => {
+                    var prefix = response.headers["content-disposition"];
+                var fileName = prefix.substr(prefix.indexOf("=") + 1, prefix.length - prefix.indexOf("=") + 1)
+                var a = document.createElement("a");
+                var blob = new Blob([response.data])
+                a.setAttribute("download", fileName)
+                a.setAttribute("href", window.URL.createObjectURL(blob))
+                a.setAttribute("target", "_blank");
+                a.click()
+
+            }).catch((error) => {
+                    this.$notify.error("导出失败！因为:" + error)
+
+            })
             },
             //文章删除
             delException(id, title) {

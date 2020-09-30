@@ -117,6 +117,11 @@
                     $(".user").html("<a style='margin-right: 2%' href='user.html'>"+res.result[0].username+"</a>")
                     $(".user").append("<button  type=\"button\" class=\"btn btn-default exitBtn\" data-toggle=\"modal\"  onclick=\"exit()\" data-target=\".myModalLogout\">退出登录</button>\n")
                     $(".user").append("\t\t\t\t<a href=\"user.html\"><button class=\"btn btn-info\">个人中心</button></a>\n")
+                    console.log(window.location.href.toString())
+                    if(window.location.href.toString().indexOf("markdownDetail")!=-1){
+                        $(".user").append("<button  type=\"button\" class=\"btn btn-success exitBtn\" data-toggle=\"modal\"  onclick=\"fileOutput()\" >导出文档</button>\n")
+                    }
+
                 }else{
                     $(".user").html("<button  type=\"button\" class=\"btn btn-default \" data-toggle=\"modal\"onclick=\"login()\" data-target=\".myModalLogin\">登录</button>\n");
                 }
@@ -197,6 +202,7 @@
                     $("#author").html("作者："+e.result[0].author);
                     $("#type").html("标签："+e.result[0].type);
                     $(".viewsTab").html("views:"+e.result[0].views)
+                    $("#createTime").html(e.result[0].createTime)
                     convert(e.result[0].content);
                     //加载结束
                     $(".load").hide()

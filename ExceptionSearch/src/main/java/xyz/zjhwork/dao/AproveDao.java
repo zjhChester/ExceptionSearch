@@ -8,7 +8,11 @@ import xyz.zjhwork.entity.Approve;
 @Repository
 public interface AproveDao {
 
-    //查询是否赞
+    /**
+     * 查询是否赞了
+     * @param approve
+     * @return
+     */
     @Select("select count(id) from approve where userId = #{userId} and exceptionId=#{exceptionId}")
     int isAproByUsernameAndExceptionId(Approve approve);
 

@@ -38,13 +38,11 @@ import java.util.Properties;
 @EnableSwagger2
 public class MvcConf implements WebMvcConfigurer {
 
-
-
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
 //        字符转换  包括解决中文乱码
         FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
-        fastJsonHttpMessageConverter.setSupportedMediaTypes(MediaType.parseMediaTypes("application/json,application/json;charset=utf-8,text/html;charset=utf-8"));
+        fastJsonHttpMessageConverter.setSupportedMediaTypes(MediaType.parseMediaTypes("application/json,application/json;charset=utf-8,text/html;charset=utf-8,application/x-msdownload;charset=UTF-8"));
         converters.add(fastJsonHttpMessageConverter);
         AbstractJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         jackson2HttpMessageConverter.setSupportedMediaTypes(MediaType.parseMediaTypes("text/html"));
@@ -59,7 +57,9 @@ public class MvcConf implements WebMvcConfigurer {
                 .addPathPatterns("/userStatus").addPathPatterns("/userExit").addPathPatterns("/newException").addPathPatterns("/myListException").addPathPatterns("/userInfo")
         .addPathPatterns("/isFavByUsernameAndExceptionId").addPathPatterns("/findFavByUsername").addPathPatterns("/deleteFavFromFavByUsernameAndExceptionId").addPathPatterns("/addFavByUsernameAndExceptionId")
         .addPathPatterns("/isAproByUsernameAndExceptionId").addPathPatterns("/addAproByUsernameAndExceptionId").addPathPatterns("/insertComment").addPathPatterns("/findHistoryByUsername").addPathPatterns("/userInfoUpdate")
-        .addPathPatterns("exception/exceptionByUserAndId/*")
+        .addPathPatterns("/exception/exceptionByUserAndId/*")
+        .addPathPatterns("/file/fileoutput").addPathPatterns("/file/myfileoutput")
+        .addPathPatterns("/notification").addPathPatterns("/notification/**")
         ;
     }
 
@@ -77,13 +77,13 @@ public class MvcConf implements WebMvcConfigurer {
 
     }
 
-    /**
-     * put请求的参数过滤器
-     */
-    @Bean
-    public HttpPutFormContentFilter httpPutFormContentFilter(){
-        return new HttpPutFormContentFilter();
-    }
+//    /**
+//     * put请求的参数过滤器
+//     */
+//    @Bean
+//    public HttpPutFormContentFilter httpPutFormContentFilter(){
+//        return new HttpPutFormContentFilter();
+//    }
 
     /**
      * mybatisConf

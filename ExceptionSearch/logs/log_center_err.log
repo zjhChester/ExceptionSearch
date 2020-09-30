@@ -1,49 +1,6 @@
-2020-09-01 09:45:46.411 ERROR [localhost-startStop-1] org.springframework.web.servlet.DispatcherServlet.initServletBean():507 - Context initialization failed
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'objectMapperConfigurer' defined in springfox.documentation.spring.web.SpringfoxWebMvcConfiguration: Post-processing of merged bean definition failed; nested exception is java.lang.IllegalStateException: Failed to introspect Class [springfox.documentation.spring.web.ObjectMapperConfigurer] from ClassLoader [sun.misc.Launcher$AppClassLoader@18b4aac2]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:560)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:502)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:312)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:228)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:310)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.registerBeanPostProcessors(PostProcessorRegistrationDelegate.java:238)
-	at org.springframework.context.support.AbstractApplicationContext.registerBeanPostProcessors(AbstractApplicationContext.java:709)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:534)
-	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:676)
-	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:545)
-	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:499)
-	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
-	at javax.servlet.GenericServlet.init(GenericServlet.java:158)
-	at org.apache.catalina.core.StandardWrapper.initServlet(StandardWrapper.java:1144)
-	at org.apache.catalina.core.StandardWrapper.load(StandardWrapper.java:986)
-	at org.apache.catalina.core.StandardContext.loadOnStartup(StandardContext.java:4978)
-	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5290)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1420)
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1410)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:748)
-Caused by: java.lang.IllegalStateException: Failed to introspect Class [springfox.documentation.spring.web.ObjectMapperConfigurer] from ClassLoader [sun.misc.Launcher$AppClassLoader@18b4aac2]
-	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:659)
-	at org.springframework.util.ReflectionUtils.doWithLocalMethods(ReflectionUtils.java:519)
-	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.buildLifecycleMetadata(InitDestroyAnnotationBeanPostProcessor.java:207)
-	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.findLifecycleMetadata(InitDestroyAnnotationBeanPostProcessor.java:188)
-	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessMergedBeanDefinition(InitDestroyAnnotationBeanPostProcessor.java:127)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessMergedBeanDefinition(CommonAnnotationBeanPostProcessor.java:297)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyMergedBeanDefinitionPostProcessors(AbstractAutowireCapableBeanFactory.java:1016)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:557)
-	... 24 common frames omitted
-Caused by: java.lang.NoClassDefFoundError: com/fasterxml/jackson/databind/ObjectMapper
-	at java.lang.Class.getDeclaredMethods0(Native Method)
-	at java.lang.Class.privateGetDeclaredMethods(Class.java:2701)
-	at java.lang.Class.getDeclaredMethods(Class.java:1975)
-	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:641)
-	... 31 common frames omitted
-Caused by: java.lang.ClassNotFoundException: com.fasterxml.jackson.databind.ObjectMapper
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:335)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 35 common frames omitted
+2020-09-29 15:09:40.930 ERROR [http-nio-9001-exec-9] xyz.zjhwork.conf.exceptionhandler.SystemExceptionHandler.handleValidException():27 - 1111111111111111111111
+2020-09-29 15:12:29.657 ERROR [http-nio-9001-exec-5] xyz.zjhwork.conf.exceptionhandler.SystemExceptionHandler.handleValidException():29 - 系统出现异常：1111111111111111111111
+2020-09-29 15:42:52.857 ERROR [http-nio-9001-exec-3] xyz.zjhwork.conf.exceptionhandler.SystemExceptionHandler.handleValidException():31 - 系统出现异常：测试主动抛出异常！
+2020-09-29 15:44:44.720 ERROR [http-nio-9001-exec-7] xyz.zjhwork.conf.exceptionhandler.SystemExceptionHandler.handleValidException():31 - 系统出现异常：测试主动抛出异常！
+2020-09-29 15:45:07.090 ERROR [http-nio-9001-exec-8] xyz.zjhwork.conf.exceptionhandler.SystemExceptionHandler.handleValidException():31 - 系统出现异常：测试主动抛出异常！
+2020-09-29 15:49:11.846 ERROR [http-nio-9001-exec-10] xyz.zjhwork.conf.exceptionhandler.SystemExceptionHandler.handleValidException():31 - 系统出现异常：测试主动抛出异常2

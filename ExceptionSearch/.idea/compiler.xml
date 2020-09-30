@@ -7,7 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ExceptionSearch" />
+        <module name="ExceptionSearch-linux" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ExceptionSearch-linux" target="8" />
+      <module name="ExceptionSearch-linux-" target="8" />
+      <module name="ExceptionSearch-linux-updating" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

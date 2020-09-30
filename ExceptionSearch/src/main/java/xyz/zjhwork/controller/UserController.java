@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import xyz.zjhwork.entity.User;
-import xyz.zjhwork.resmodel.ResponseModel;
-import xyz.zjhwork.resmodel.userResModel.UserResModel;
+import xyz.zjhwork.dto.ResponseModel;
+import xyz.zjhwork.dto.userResModel.UserResModel;
 import xyz.zjhwork.service.UserService;
 import xyz.zjhwork.utils.DateUtils;
 

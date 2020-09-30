@@ -1,4 +1,4 @@
-package xyz.zjhwork.resmodel.userResModel;
+package xyz.zjhwork.dto.userResModel;
 
 import java.util.ArrayList;
 import java.util.List;

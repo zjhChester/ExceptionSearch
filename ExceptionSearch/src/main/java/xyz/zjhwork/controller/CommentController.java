@@ -7,7 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import xyz.zjhwork.common.NotificationType;
 import xyz.zjhwork.entity.Comment;
+import xyz.zjhwork.entity.Notification;
+import xyz.zjhwork.service.ExceptionService;
+import xyz.zjhwork.service.NotificationService;
 import xyz.zjhwork.service.OtherService;
 import xyz.zjhwork.utils.DateUtils;
 
@@ -18,8 +22,17 @@ import java.util.List;
 @Controller
 @Api(tags = "Comment Service Interfaces")
 public class CommentController {
+    private final OtherService otherService;
+    private final NotificationService notificationService;
+    private final ExceptionService exceptionService;
+
     @Autowired
-    private OtherService otherService;
+    public CommentController(ExceptionService exceptionService, NotificationService notificationService, OtherService otherService) {
+        this.exceptionService = exceptionService;
+        this.notificationService = notificationService;
+        this.otherService = otherService;
+    }
+
     //添加评论
     @ApiOperation(value = "添加评论接口", notes = "添加对该文章的评论信息，权限控制")
     @ResponseBody
@@ -34,6 +47,17 @@ public class CommentController {
             comment.setUserId(request.getSession().getAttribute("loginUser").toString());
             int i = otherService.insertComment(comment);
             if(i!=0){
+                Notification notification = Notification.builder().
+                        delStatus("0").
+                        id(0).
+                        createTime(DateUtils.CURRENT_TIME).
+                        exceptionId(id).
+                        modifyTime(DateUtils.CURRENT_TIME).
+                        receiver(exceptionService.findExceptionById(id).getAuthor()).
+                        sender(request.getSession().getAttribute("loginUser").toString()).
+                        type(NotificationType.COMMENT.toString()).
+                        build();
+                notificationService.create(notification);
                 return 1;
             }else{
                 return 0;

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.zjhwork.aop.interfaces.AddViewsCount;
 import xyz.zjhwork.entity.Exception;
 import xyz.zjhwork.entity.History;
-import xyz.zjhwork.resmodel.ResponseModel;
+import xyz.zjhwork.dto.ResponseModel;
 import xyz.zjhwork.service.ExceptionService;
 import xyz.zjhwork.service.OtherService;
 import xyz.zjhwork.utils.DateUtils;
@@ -110,7 +110,7 @@ public class ExceptionController {
         return ResponseModel.successResModel(1,realKeywords.toString().trim().substring(0,realKeywords.length()-1), resList.toArray());
     }
 
-    @ApiOperation(value = "搜索条数接口", notes = "该接口配合搜索分页搜索接口进行分页，成功返回的desc为响应时间")
+    @ApiOperation(value = "搜索条数接口", notes = "该接口配合搜索分页搜索接口进行分页，成功返回的desc为响应时间,code为查询的条数")
     @ResponseBody
     @GetMapping("/searchCount")
     public ResponseModel searchCount(String keywords,String type){
@@ -149,7 +149,7 @@ public class ExceptionController {
      * CRUD
      */
     //新增
-    @ApiOperation(value = "创建文章接口", notes = "新建文章接口（专用），传入标题，描述，内容，类型即可，其中内容支持富文本格式（markdown格式），最好前端选型即为markdown，其余参数后台生成，登录权限控制")
+    @ApiOperation(value = "创建文章接口", notes = "新建文章接口（专用），传入标题，描述，内容，类型即可，其中内容支持富文本格式（markdown格式），最好前端选型即为markdown，其余参数后台生成，返回值中code为当前新建文章的id（用于跳转当前文章详情页），登录权限控制")
     @PostMapping("/newException")
     @ResponseBody
     public ResponseModel newException(@RequestBody @Valid Exception exception, HttpServletRequest request){
@@ -190,7 +190,8 @@ public class ExceptionController {
         exception.setId(id);
         Object loginUser = request.getSession().getAttribute("loginUser");
         if (loginUser!=null&&exception.getTitle()!=null){
-            exception.setCreateTime(DateUtils.getFormat(new Date()));
+            //预处理方案是新增修改时间字段 暂定
+//            exception.setCreateTime(DateUtils.getFormat(new Date()));
             int i = exceptionService.updateException(exception);
             return i==1?ResponseModel.successResModel(1,"SUCCESS",null):ResponseModel.failResModel(0,"修改失败");
         }else{

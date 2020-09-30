@@ -3,8 +3,8 @@ package xyz.zjhwork.interceptor;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import xyz.zjhwork.resmodel.ResponseModel;
-import xyz.zjhwork.resmodel.userResModel.UserResModel;
+import xyz.zjhwork.dto.ResponseModel;
+import xyz.zjhwork.dto.userResModel.UserResModel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -150,6 +150,7 @@
         </div>
     </div>
 </div>
+<script src="js/axios.js"></script>
 <script type="text/javascript">
     $(function () {
         //登录状态检查
@@ -195,6 +196,50 @@
     $(".submitCommentBtn").click(function () {
         addComments(location.href.toString().substr(location.href.indexOf("?")+1).split("=")[1])
     })
+
+    function fileOutput(){
+        var id =location.href.toString().substr(location.href.indexOf('?')+1).split('=')[1];
+        axios({
+            url: "file/fileoutput?ids="+id,
+            method: "GET",
+            responseType: 'blob'
+        }).then(response => {
+        var prefix = response.headers["content-disposition"];
+        var fileName = prefix.substr(prefix.indexOf("=")+1,prefix.length-prefix.indexOf("=")+1)
+        var a = document.createElement("a");
+        var blob =new Blob([response.data])
+        a.setAttribute("download",fileName)
+        a.setAttribute("href",window.URL.createObjectURL(blob))
+        a.setAttribute("target","_blank");
+        a.click()
+    })
+    .catch((error) => {
+            alert("导出失败,因为："+error);
+
+    })
+        // $.ajax({
+        //     url:"file/fileoutput?ids="+id,
+        //     type:"GET",
+        //     xhrFields: {
+        //         responseType: 'blob'
+        //     },
+        //     complete:function(xhr,response){
+        //         console.log(response)
+        //         var prefix = xhr.getResponseHeader('Content-Disposition');
+        //         var fileName = prefix.substr(prefix.indexOf("=")+1,prefix.length-prefix.indexOf("=")+1)
+        //
+        //         var a = document.createElement("a");
+        //         var blob =new Blob([response])
+        //         console.log(blob)
+        //
+        //         a.setAttribute("download",fileName)
+        //         a.setAttribute("href",window.URL.createObjectURL(blob))
+        //         a.setAttribute("target","_blank");
+        //         a.click()
+        //     }
+        //
+        // })
+    }
 
 
 

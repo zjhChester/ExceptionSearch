@@ -38,12 +38,14 @@
             </plugin>
         </plugins>
     </build>
+    <!--ExceptionSearch-linux-updatingVersionOfSpringAndTomcat-20200904-->
+    <!-- artifactId-tomcat.currentSystem-updatingVersionDesc-version  -->
     <groupId>xyz.zjhwork</groupId>
-    <artifactId>ExceptionSearch</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>exceptionSearch</artifactId>
+    <version>20200917</version>
     <properties>
-        <spring.version>5.0.17.RELEASE</spring.version>
-        <tomcat.version>8.5.55</tomcat.version>
+        <spring.version>5.2.6.RELEASE</spring.version>
+        <tomcat.version>8.5.56</tomcat.version>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
