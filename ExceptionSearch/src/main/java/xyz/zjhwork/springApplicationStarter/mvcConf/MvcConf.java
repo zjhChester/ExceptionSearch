@@ -1,4 +1,4 @@
-package xyz.zjhwork.springApplicationStarter.mvcConf;
+package xyz.zjhwork.springapplicationstarter.mvcConf;
 
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.zaxxer.hikari.HikariDataSource;
@@ -15,13 +15,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.filter.HttpPutFormContentFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import xyz.zjhwork.interceptor.AccessOriginInterceptor;
 import xyz.zjhwork.interceptor.LoginInterceptor;
+import xyz.zjhwork.utils.PropertiesUtils;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -52,6 +53,11 @@ public class MvcConf implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        //跨域处理
+        if("true".equals(PropertiesUtils.getConfig("access-origin"))){
+            registry.addInterceptor(new AccessOriginInterceptor()).addPathPatterns("/**");
+        }
+
         //拦截器注册
         registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/newException").addPathPatterns("/")
                 .addPathPatterns("/userStatus").addPathPatterns("/userExit").addPathPatterns("/newException").addPathPatterns("/myListException").addPathPatterns("/userInfo")

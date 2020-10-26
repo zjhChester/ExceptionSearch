@@ -1,12 +1,11 @@
-package xyz.zjhwork.springApplicationStarter.webServletRegister;
+package xyz.zjhwork.springapplicationstarter.webservletregister;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-import xyz.zjhwork.springApplicationStarter.mvcConf.MvcConf;
+import xyz.zjhwork.springapplicationstarter.mvcConf.MvcConf;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
 public class WebServletRegister implements WebApplicationInitializer {

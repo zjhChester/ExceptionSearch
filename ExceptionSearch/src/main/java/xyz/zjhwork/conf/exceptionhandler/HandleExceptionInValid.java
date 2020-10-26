@@ -12,6 +12,8 @@ import xyz.zjhwork.dto.ResponseModel;
 
 import java.util.Objects;
 
+import static xyz.zjhwork.common.Constant.*;
+
 /**
  * @author zjhChester
  */
@@ -28,7 +30,7 @@ public class HandleExceptionInValid {
         //日志记录错误信息
         log.error(Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
         //将错误信息返回给前台
-        return ResponseEntity.status(500).body(ResponseModel.failResModel(0,Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage()));
+        return ResponseEntity.status(500).body(ResponseModel.failResModel(SYSTEM_EXCEPTION_CODE,Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage()));
     }
     //
 
@@ -43,7 +45,7 @@ public class HandleExceptionInValid {
         //日志记录错误信息
         log.error(Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
         //将错误信息返回给前台
-        return ResponseEntity.status(500).body(ResponseModel.failResModel(0,Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage()));
+        return ResponseEntity.status(500).body(ResponseModel.failResModel(SYSTEM_EXCEPTION_CODE,Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage()));
 
     }
 }

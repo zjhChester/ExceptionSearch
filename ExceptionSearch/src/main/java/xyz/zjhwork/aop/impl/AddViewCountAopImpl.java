@@ -38,11 +38,12 @@ public class AddViewCountAopImpl {
     @Before(value = "do_annotation()")
     public void addViewCount(JoinPoint joinPoint){
         log.info("do addViewCount.....");
-        Map<String,Object> map = new HashMap<>();
+        Map<String,Object> map = new HashMap<>(16);
         Object[] args = joinPoint.getArgs();
         for (Object arg : args) {
-            if(null!=arg)
+            if(null!=arg){
           map.put(arg.getClass().toString(),arg);
+            }
         }
 
         RequestFacade request =  (RequestFacade)map.get("class org.apache.catalina.connector.RequestFacade");

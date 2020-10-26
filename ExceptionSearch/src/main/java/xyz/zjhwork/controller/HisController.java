@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@Api(tags = "History Steps Interfaces")
+@Api(tags = "历史记录接口 History Steps Interfaces")
 public class HisController {
     @Autowired
     private OtherService otherService;

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 1、页面跳转
  */
 @Controller
-@Api(tags = "Abandoned Interfaces！")
+@Api(tags = "路由跳转接口 Abandoned/router Interfaces！")
 public class IndexController {
     @RequestMapping("/favicon.ico")
     @ResponseBody

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>新建博文</title>
+		<script type="text/javascript" src="js/showdown.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link id="theme" rel="stylesheet" type="text/css" href="theme/engwrite.css" />
+		<link rel="stylesheet" type="text/css" href="css/load.css" />
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/util.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/md5.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/axios.js"></script>
+        <style>
+			*{
+				padding: 0;
+				margin: 0;
+			}
+		     pre {
+				 padding: 1%;
+		     }
+			#result::-webkit-scrollbar {
+				display: none
+			}
+		</style>
+	</head>
+	<body>
+	<div class="header col-xs-12">
+		<div class="col-xs-4">
+			<a href="/"><button class="btn btn-primary">主页</button></a>
+		</div>
+        <div class="user col-xs-8 text-right">
+            <button  type="button" class="btn btn-default login" data-toggle="modal"onclick="login()" data-target=".myModalLogin">登录</button>
+        </div>
+	</div>
+		<div class="">
+			<div class="col-xs-12 text-warning text-center" style="height: 60px;">
+				<h1>文章编辑</h1>
+			</div>
+    	</div>
+				<hr>
+				<div class="row">
+					<div class="form-inline text-center text-warning">
+						<span>标题：</span>
+						<input class="form-control" type="text"  name="title" value="" />
+						<span>描述：</span>
+						<input class="form-control" type="text"  name="desc" value="" />
+						<span>类型：</span>
+						<input class="form-control" type="text"  name="type" value="" />
+					</div>
+                    <hr style="border: none;">
+					<div class="col-xs-6 ">
+						<div class="col-xs-12 text-center ">
+							<div class=" text-center bg-primary" style="height: 40px;line-height: 40px;letter-spacing: 2px;font-size: 1.5em;font-weight: 800;">
+								<span>编辑区</span>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<textarea id="oriContent" style="padding: 2%;width:100%;" onkeyup="convert()"></textarea>
+						</div>
+						<div class="text-center">
+							<button type="button" class="btn btn-danger refreshBtn" >清除编辑区</button>
+						</div>
+
+					</div>
+					<!--<-&#45;&#45;设置展示的div添加id-!>-->
+					<div class="col-xs-6 ">
+						<div class="col-xs-12 text-center ">
+							<div id="" class=" text-center bg-primary" style="height: 40px;line-height: 40px;letter-spacing: 2px;font-size: 1.5em;font-weight: 800;">
+								<span >预览区</span>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<div style="width: 100%;overflow-x: scroll;border: 1px solid #faffeb" id="result" ></div>
+						</div>
+						<div class=" text-center">
+							<button type="button" class="btn btn-primary submitBtn" style="width: 80px; text-align: center;">发布</button>
+						</div>
+					</div>
+				</div>
+
+		<!--加载框-->
+		<div class="load">
+			<div class="loader" title="2">
+				<svg version="1.1" id="loader-1"  x="0px" y="0px" width="100px" height="100px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+				<path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+				<animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite" />
+				</path>
+			</svg>
+				<div class="load-msg"> </div>
+			</div>
+		</div>
+		<!--模态框-->
+		<div class="modal fade myModalLogin" style="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header" style="background:#204d74;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title myModalLabel text-center"style="color: white;"><span>用户登录</span></h4>
+					</div>
+					<div class="modal-body myModal_content">
+						<div class="form-inline text-center" style="margin-top: 5%">
+							<span>账号：</span>
+							<input name="username" class="form-control"  type="text" placeholder="username">
+						</div>
+						<div class="form-inline text-center" style="margin-top: 5%">
+							<span>密码：</span>
+							<input name="password" class="form-control" type="password" placeholder="password">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="cancelLogin">取消</button>
+						<button type="button" class="btn btn-primary" id="myModal_enterLogin" >登录</button>
+						<a href="register.html"><button type="button" class="btn btn-warning" >注册</button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade myModalLogout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header"style="background:#204d74;color: white">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title myModalLabel" ><span>用户退出</span></h4>
+					</div>
+					<div class="modal-body myModal_content">
+						<span>确认退出吗？</span>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="cancelExit">关闭</button>
+						<button type="button" class="btn btn-primary" id="myModal_enter">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+				<script type="text/javascript">
+
+					//绑定滚动条
+					$("#oriContent").scroll(function () {
+					    //console.log("写入区",$("#oriContent").scrollTop(),$("#oriContent")[0].scrollHeight,$("#oriContent").scrollTop()/$("#oriContent")[0].scrollHeight*100+"%")
+                        //console.log("预览区",$("#result").scrollTop(),$("#result")[0].scrollHeight,$("#result").scrollTop()/$("#result")[0].scrollHeight*100+"%")
+						document.getElementById('result').scrollTop=($("#oriContent").scrollTop()*$("#result")[0].scrollHeight)/$("#oriContent")[0].scrollHeight ;
+                    })
+					var initContent = "# 示例输入\n" +
+                        "## 学习目标：\n" +
+                        "<font color=#999AAA >提示：这里可以添加学习目标\n" +
+                        ">例如：\n" +
+                        "\n" +
+                        "1、 搭建 Java 开发环境\n" +
+                        "2、 掌握 Java 基本语法\n" +
+                        "3、 掌握条件语句 \n" +
+                        "4、 掌握循环语句\n" +
+                        "\n" +
+                        "## 学习内容：  \n" +
+                        "姓名|技能|排行\n" +
+                        "--|:--:|--:\n" +
+                        "刘备|哭|大哥\n" +
+                        "关羽|打|二哥\n" +
+                        "张飞|骂|三弟\n" +
+                        "\n" +
+                        "```java\n" +
+                        "public static void main(String[] args){\n" +
+                        "System.out.println(\"11111\");\n" +
+                        "}\n" +
+                        "```\n" +
+                        "## 这是两张图片  \n" +
+                        "第一种(img标签,可点击)|第二种(原生markdown语法)\n" +
+                        ":--:|:--:\n" +
+                        "<a href='http://img.zjhwork.xyz/logo.png' target='_blank'><img src='http://img.zjhwork.xyz/logo.png'></a> |![这里是图片唯一id，随便输只要不重复](http://img.zjhwork.xyz/logo.png)";
+
+					$(function(){
+
+					    //初始化隐藏模态框
+					    $(".load").hide()
+                        $(".load-msg").html("请稍后...")
+					    //自适应高度
+						$("#oriContent").css("height",window.innerHeight-300)
+						$("#result").css("height",window.innerHeight-300)
+
+                        //检查登录状态
+                        createMarkdownUserStatus()
+						//提示初始化
+						$("#oriContent").html(initContent)
+						convert()
+					})
+					function convert() {
+						var text = document.getElementById("oriContent").value;
+						var converter = new showdown.Converter({
+							tables: true
+						});
+						var html = converter.makeHtml(text);
+						document.getElementById("result").innerHTML = html;
+					}
+					//清空编辑区
+					$(".refreshBtn").click(function () {
+						$("#oriContent").html("")
+                        convert()
+                    })
+
+                    $(".submitBtn").click(function () {
+                        createMarkdownUserStatus();
+                        var title =  $("input[name = 'title']").val();
+                        var type  =  $("input[name = 'type']").val();
+                        var desc  =  $("input[name = 'desc']").val();
+                        var content  = $("#oriContent").val();
+                        if(title == ""){
+                            $("input[name = 'title']").focus();
+                            return;
+                        }else  if(type == ""){
+                            $("input[name = 'type']").focus();
+                            return;
+                        }else  if(desc == ""){
+                            $("input[name = 'desc']").focus();
+                            return;
+                        }else if(content == ""){
+                            $("#oriContent").focus();
+                            return;
+                        }
+                        var exception = {title:title,desc:desc,type:type,content:content};
+                        axios({
+                            url: "newException",
+                            method: "POST",
+                            data:exception,
+                        }).then(response => {
+                            //如果请求成功，则进行页面初始化
+                            if (response.data.code != 0) {
+                            //跳转去当前文章的详情页
+                            location.href="markdownDetail.html?id="+response.data.code;
+                            $(".load-msg").html("发表成功！请稍后")
+                            //两秒后消失
+                            $(".load").show().delay(2000).hide()
+                        } else {
+                            alert("发表失败,因为："+response.data.desc);
+                            //dom元素的值不用清空方便发起第二次提交
+                        }
+                    })
+                    .catch((error) => {
+                            alert("发表失败,因为："+error);
+                        //dom元素的值不用清空方便发起第二次提交
+                    })
+
+                    })
+
+                    <!--{tables: true} -->
+                    /*
+姓名|技能|排行
+--|:--:|--:
+刘备|哭|大哥
+关羽|打|二哥
+张飞|骂|三弟
+
+```java
+public static void main(String[] args){
+System.out.println("11111");
+}
+```
+>引用
+*/
+				</script>
+	</body>
+</html>
+

@@ -29,7 +29,7 @@ public interface NotificationDao {
      * @param username 用户名
      * @return Notification集合
      */
-    @Select("select id, receiver,sender,createTime,exceptionId,type,delStatus,modifyTime from notification where receiver = #{username} order by delStatus asc, modifyTime desc limit #{startIndex},#{pageSize}")
+    @Select("select id, receiver,sender,createTime,exceptionId,type,delStatus,modifyTime,message from notification where receiver = #{username} order by delStatus asc, modifyTime desc limit #{startIndex},#{pageSize}")
     List<Notification> getPage(@Param("username") String username,@Param("startIndex") Integer startIndex,@Param("pageSize") Integer pageSize);
 
     /**
@@ -46,7 +46,7 @@ public interface NotificationDao {
      * @param notification 推送pojo
      * @return true/false
      */
-    @Insert("insert into notification(id,receiver,sender,createTime,modifyTime,exceptionId,type,delStatus) values (#{id},#{receiver},#{sender},#{createTime},#{modifyTime},#{exceptionId},#{type},#{delStatus})")
+    @Insert("insert into notification(id,receiver,sender,createTime,modifyTime,exceptionId,type,delStatus,message) values (#{id},#{receiver},#{sender},#{createTime},#{modifyTime},#{exceptionId},#{type},#{delStatus},#{message})")
     int create(Notification notification);
 
     /**
@@ -56,4 +56,12 @@ public interface NotificationDao {
      */
     @Select("select count(id) from notification where receiver = #{username}")
     int getCountByReceiver(String username);
+
+    /**
+     * 根据用户名查询未读条数
+     * @param username 用户名
+     * @return 条数
+     */
+    @Select("select count(id) from notification where username=#{username} and delStatus='0'")
+    int getUnreadCountByUsername(String username);
 }

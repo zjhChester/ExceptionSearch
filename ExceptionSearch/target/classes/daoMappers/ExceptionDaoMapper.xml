@@ -1,0 +1,142 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.zjhwork.dao.ExceptionDao">
+    <select id="findException" parameterType="xyz.zjhwork.entity.Exception" resultType="xyz.zjhwork.entity.Exception">
+        select * from exception
+        <where>
+            <if test="id != null ">
+                and id = #{id}
+            </if>
+            <if test="title != null and title!=''">
+                and title like concat('',#{title},'%')
+            </if>
+            <if test="desc != null and desc!=''">
+                and  exception.desc like concat('',#{desc},'%')
+            </if>
+            <if test="content != null and content!=''">
+                and content like concat('%',#{content},'%')
+            </if>
+            <if test="author != null and author!=''">
+                and author = #{author}
+            </if>
+            <if test="type != null and type!=''">
+                and  exception.type = #{type}
+            </if>
+            and delStatus=0
+        </where>
+    </select>
+
+    <update  parameterType="xyz.zjhwork.entity.Exception" id="updateException">
+        update exception
+        <trim prefix="set" suffixOverrides=",">
+            <if test="title!=null and title!=''">
+                title = #{title},
+            </if>
+            <if test="desc!=null and desc!=''">
+                exception.desc = #{desc},
+            </if>
+            <if test="content!=null and content!=''">
+                content = #{content},
+            </if>
+            <if test="author!=null and author!=''">
+                author = #{author},
+            </if>
+            <if test="remark!=null and remark!=''">
+                remark = #{remark},
+            </if>
+            <if test="type!=null and type!=''">
+                exception.type = #{type},
+            </if>
+            <if test="views!=null and views!=''">
+                views = #{views},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                createTime = #{createTime},
+            </if>
+        </trim>
+        where id = #{id}
+
+    </update>
+
+    <select id="searchExceptionByKeywords" resultType="xyz.zjhwork.entity.Exception">
+        SELECT a.id,a.title,a.desc,a.author,a.type,a.createTime,a.views from exception a, exception b
+        <where>
+            <if test="title != null  ">
+                and
+                <foreach item="item" collection="title" index="index" separator="OR">
+                     b.title like concat('%',#{item},'%')
+                </foreach>
+            </if>
+            <if test="desc != null ">
+                and
+                <foreach item="item" collection="desc" index="index" separator="OR">
+                     b.desc like concat('%',#{item},'%')
+                </foreach>
+            </if>
+            <if test="content != null ">
+                and
+                <foreach item="item" collection="content" index="index" separator="OR">
+                     locate (#{item},b.content)
+                </foreach>
+            </if>
+            <if test="type != null ">
+                and
+                <foreach item="item" collection="type" index="index" separator="OR">
+                     b.type like concat('%',#{item},'%')
+                </foreach>
+
+            </if>
+        </where>
+        and b.id = a.id
+        and b.delStatus=0
+        limit #{currIndex} , 20
+    </select>
+
+    <select id="searchCount" parameterType="xyz.zjhwork.entity.Exception" resultType="Integer">
+        select count(id) from exception
+        <where>
+            <if test="title != null  ">
+                and
+                <foreach item="item" collection="title" index="index" separator="OR">
+                    title like concat('%',#{item},'%')
+                </foreach>
+            </if>
+            <if test="desc != null ">
+                and
+                <foreach item="item" collection="desc" index="index" separator="OR">
+                    exception.desc like concat('%',#{item},'%')
+                </foreach>
+            </if>
+            <if test="content != null ">
+                and
+                <foreach item="item" collection="content" index="index" separator="OR">
+                    locate (#{item},content)
+                </foreach>
+            </if>
+            <if test="type != null ">
+                and
+                <foreach item="item" collection="type" index="index" separator="OR">
+                    exception.type like concat('%',#{item},'%')
+                </foreach>
+            </if>
+        </where>
+        and delStatus=0
+    </select>
+    <select id="searchAssociation" resultType="xyz.zjhwork.entity.Exception">
+        select title from exception where id in (
+        select id from exception
+        <where>
+            <if test="keywords != null  ">
+                and
+                <foreach item="item" collection="keywords" index="index" separator="OR">
+                    title like concat('',#{item},'%')
+                </foreach>
+            </if>
+            and delStatus=0
+            order by length(title)
+        </where>
+        )
+        limit 1 , 7
+    </select>
+</mapper>

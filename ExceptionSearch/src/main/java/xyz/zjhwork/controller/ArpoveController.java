@@ -24,7 +24,7 @@ import java.util.Date;
  * @author zjhChester
  */
 @Controller
-@Api(tags = "Approve Service Interfaces")
+@Api(tags = "点赞接口 Approve Service Interfaces")
 public class ArpoveController {
     private final OtherService otherService;
 

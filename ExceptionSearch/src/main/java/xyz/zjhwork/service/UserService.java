@@ -1,6 +1,5 @@
 package xyz.zjhwork.service;
 
-import org.springframework.stereotype.Service;
 import xyz.zjhwork.entity.User;
 
 import java.util.List;
@@ -16,4 +15,18 @@ public interface UserService {
 
     //业务
     int login(User user);
+
+    /**
+     * findById
+     * @param id id
+     * @return User
+     */
+    User findById(Integer id);
+
+    /**
+     * findByUsername
+     * @param username 用户名
+     * @return User
+     */
+    User findByUsername(String username);
 }

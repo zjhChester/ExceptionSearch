@@ -9,7 +9,7 @@ import java.util.List;
 
 
 /**
- * @Describe:
+ * @Describe: 推送输出DTO
  * @Author: zjhChester
  * @Date: 16:15 2020/9/30
  */

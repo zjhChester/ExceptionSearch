@@ -26,7 +26,7 @@ import java.util.*;
  * 3、按浏览量排名
  */
 @Controller
-@Api(tags = "Base Service interfaces ")
+@Api(tags = "主线业务 Base Service interfaces ")
 @Slf4j
 public class ExceptionController {
     @Autowired
@@ -198,7 +198,14 @@ public class ExceptionController {
             return ResponseModel.failResModel(0,"no session user or gr");
         }
     }
-    //查找
+
+
+    /**
+     * 文章详情接口
+     * @param id exceptionId
+     * @param request http请求
+     * @return 用于控制系统的整体返回格式DTO
+     */
     @ApiOperation(value = "文章详情接口", notes = "文章详情接口（通用），传入id即可")
     @ResponseBody
     @AddViewsCount
@@ -279,7 +286,7 @@ public class ExceptionController {
     }
 
     //最新文章
-    @ApiOperation(value = "用户中心>最新文章接口", notes = "最新文章接口（专用），登录权限控制")
+    @ApiOperation(value = "用户中心>最新文章接口", notes = "最新文章接口（专用）")
     @ResponseBody
     @GetMapping("/newListException")
     public List<Exception> newListException(){

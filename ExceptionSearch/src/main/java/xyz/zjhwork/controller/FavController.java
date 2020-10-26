@@ -25,7 +25,7 @@ import java.util.List;
  * 收藏的业务
  * @author zjhChester
  */
-@Api(tags = "Favorite Msg Service interfaces ")
+@Api(tags = "收藏接口 Favorite Msg Service interfaces ")
 @RestController
 public class FavController {
     @Autowired

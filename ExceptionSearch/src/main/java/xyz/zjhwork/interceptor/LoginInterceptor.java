@@ -14,7 +14,7 @@ import java.util.Objects;
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(request.getRequestURI().equals("/")){
+        if("/".equals(request.getRequestURI())){
             //欢迎页面
             request.getRequestDispatcher("/index.html").forward(request,response);
             return false;

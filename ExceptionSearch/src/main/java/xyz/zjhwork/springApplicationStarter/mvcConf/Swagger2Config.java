@@ -1,4 +1,4 @@
-package xyz.zjhwork.springApplicationStarter.mvcConf;
+package xyz.zjhwork.springapplicationstarter.mvcConf;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -24,7 +24,7 @@ import java.util.Objects;
  * 2、用户信息维护
  */
 @Controller
-@Api(tags = "User Service Interfaces")
+@Api(tags = "用户接口User Service Interfaces")
 public class UserController {
     @Autowired
     private UserService userService;

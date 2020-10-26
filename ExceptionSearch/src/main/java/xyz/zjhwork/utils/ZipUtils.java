@@ -1,5 +1,7 @@
 package xyz.zjhwork.utils;
 
+import xyz.zjhwork.entity.User;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -8,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -95,6 +98,4 @@ public class ZipUtils {
             }
         }
     }
-
-
 }

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>博文详情</title>
+    <meta class="keywords" name="Keywords" Content="Exception Search">
+    <script type="text/javascript" src="js/showdown.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link id="theme" rel="stylesheet" type="text/css" href="theme/engwrite.css"/>
+    <link rel="stylesheet" type="text/css" href="css/load.css"/>
+    <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/md5.js" type="text/javascript" charset="utf-8"></script>
+
+    <style>
+        #detail{
+            margin: 0 auto;
+            max-width: 1000px;
+        }
+        .comment_list .comment_body:hover {
+            transition: 0.3s ease-in;
+            box-shadow: 5px 5px 5px 3px gray;
+        }
+
+        *::-webkit-scrollbar {
+            display: none
+        }
+    </style>
+</head>
+<body>
+<div class="header col-xs-12">
+    <div class=col-xs-8>
+        <a href="/">
+            <button class="btn btn-primary">主页</button>
+        </a>
+        <a href="/createMarkdown.html" target="_blank">
+            <button class="btn btn-warning">写文章</button>
+        </a>
+        <button class="btn btn-success favoriteBtn" onclick="addFavorite(location.href.toString().substr(location.href.indexOf('?')+1).split('=')[1])">收藏该文</button>
+        <button class="btn btn-info ApproveBtn">❤</button>
+        <button disabled class="btn btn-danger viewsTab">views:</button>
+    </div>
+    <div class="col-xs-4 text-right user" >
+        <button  type="button" class="btn btn-default " data-toggle="modal"onclick="login()" data-target=".myModalLogin">登录</button>
+    </div>
+</div>
+<div id="detail">
+    <div class="col-xs-12 text-warning text-center" style="height: 60px;">
+        <h1 id="title">文章标题</h1>
+    </div>
+    <div class="col-xs-12">
+        <div id="type">
+            <span>标签：java</span>
+        </div>
+    </div>
+    <hr>
+    <div class="container col-xs-12 content" style="overflow-y: scroll">
+
+    </div>
+    <div class="col-xs-12 footer">
+        <div id="author" class="text-right">
+            <span>作者：隐姓埋名的张小皮</span>
+        </div>
+        <div id="createTime" class="text-right">
+            <span>2019-12-12 18:12:21</span>
+        </div>
+    </div>
+    <hr>
+    <div class="col-xs-12 commentPart">
+        <div class=" text-center "
+             style="height: 40px;line-height: 40px;letter-spacing: 2px;font-size: 1.5em;font-weight: 800;">
+            <span>评论专区</span>
+        </div>
+        <div class="col-xs-12  text-right form-inline">
+            <textarea class="form-control" id="commentContent" placeholder="输入你想说的话吧"
+                      style="padding: 3%;width:100%;"></textarea>
+            <button class="btn btn-primary submitCommentBtn" type="button">发表</button>
+        </div>
+        <div class="comment_list col-xs-12" style="margin-bottom: 3%">
+            <div class="col-xs-12 comment_body"
+                 style="padding: 2%;background: white;border-radius: 10px;margin-top: 3%">
+                #1楼
+                <div class="col-xs-12">
+                    <span>发表人：</span>
+                </div>
+                <div class="col-xs-12" style="margin-top: 2%">
+                    <span>我觉得写得不错</span>
+                </div>
+                <hr>
+                <div class="col-xs-12 text-right">
+                    <span>时间：</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--加载框-->
+<div class="load">
+    <div class="loader" title="2">
+        <svg version="1.1" id="loader-1"  x="0px" y="0px" width="100px" height="100px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+				<path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+				<animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite" />
+				</path>
+			</svg>
+        <div class="load-msg"></div>
+    </div>
+</div>
+<!--模态框-->
+<div class="modal fade myModalLogin" style="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#204d74;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title myModalLabel text-center"style="color: white;"><span>用户登录</span></h4>
+            </div>
+            <div class="modal-body myModal_content">
+                <div class="form-inline text-center" style="margin-top: 5%">
+                    <span>账号：</span>
+                    <input name="username" class="form-control"  type="text" placeholder="username">
+                </div>
+                <div class="form-inline text-center" style="margin-top: 5%">
+                    <span>密码：</span>
+                    <input name="password" class="form-control" type="password" placeholder="password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelLogin">取消</button>
+                <button type="button" class="btn btn-primary" id="myModal_enterLogin" >登录</button>
+                <a href="register.html"><button type="button" class="btn btn-warning" >注册</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade myModalLogout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header"style="background:#204d74;color: white">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title myModalLabel" ><span>用户退出</span></h4>
+            </div>
+            <div class="modal-body myModal_content">
+                <span>确认退出吗？</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelExit">关闭</button>
+                <button type="button" class="btn btn-primary" id="myModal_enter">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/axios.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //登录状态检查
+        userStatus();
+        //初始化大小
+        $(".content").css("height", window.innerHeight - 300)
+        //初始化加载框
+        $(".load").hide();
+
+        $(".load-msg").html("正在加载...")
+        $(".load").show()
+        //加载文章
+        var id = location.href.toString().substr(location.href.indexOf("?")+1).split("=")[1];
+        if (id == undefined) {
+            alert("加载失败未知id")
+            location.href = "index.html"
+            $(".load").hide()
+        } else {
+            loadException(id);
+            //加载赞
+            approveStatus(id)
+            approveCount(id)
+            //加载评论
+            loadingComments(id)
+            //加载是否收藏
+            favoriteStatus(id)
+        }
+
+    })
+
+    //赞赏
+    $(".ApproveBtn").click(function () {
+        var id = location.href.toString().substr(location.href.indexOf("?")+1).split("=")[1]
+        if (id == undefined) {
+            alert("加载失败未知id")
+            $(".load").hide()
+        } else {
+            addApprove(id)
+            approveStatus(id)
+        }
+    })
+    //评论
+    $(".submitCommentBtn").click(function () {
+        addComments(location.href.toString().substr(location.href.indexOf("?")+1).split("=")[1])
+    })
+
+    function fileOutput(){
+        var id =location.href.toString().substr(location.href.indexOf('?')+1).split('=')[1];
+        axios({
+            url: "file/fileoutput?ids="+id,
+            method: "GET",
+            responseType: 'blob'
+        }).then(response => {
+        var prefix = response.headers["content-disposition"];
+        var fileName = prefix.substr(prefix.indexOf("=")+1,prefix.length-prefix.indexOf("=")+1)
+        var a = document.createElement("a");
+        var blob =new Blob([response.data])
+        a.setAttribute("download",fileName)
+        a.setAttribute("href",window.URL.createObjectURL(blob))
+        a.setAttribute("target","_blank");
+        a.click()
+    })
+    .catch((error) => {
+            alert("导出失败,因为："+error);
+
+    })
+        // $.ajax({
+        //     url:"file/fileoutput?ids="+id,
+        //     type:"GET",
+        //     xhrFields: {
+        //         responseType: 'blob'
+        //     },
+        //     complete:function(xhr,response){
+        //         console.log(response)
+        //         var prefix = xhr.getResponseHeader('Content-Disposition');
+        //         var fileName = prefix.substr(prefix.indexOf("=")+1,prefix.length-prefix.indexOf("=")+1)
+        //
+        //         var a = document.createElement("a");
+        //         var blob =new Blob([response])
+        //         console.log(blob)
+        //
+        //         a.setAttribute("download",fileName)
+        //         a.setAttribute("href",window.URL.createObjectURL(blob))
+        //         a.setAttribute("target","_blank");
+        //         a.click()
+        //     }
+        //
+        // })
+    }
+
+
+
+</script>
+</body>
+</html>

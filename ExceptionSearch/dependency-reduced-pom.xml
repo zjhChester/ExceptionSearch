@@ -25,7 +25,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>xyz.zjhwork.springApplicationStarter.BootStarter</mainClass>
+                  <mainClass>xyz.zjhwork.springapplicationstarter.BootStarter</mainClass>
                 </transformer>
               </transformers>
             </configuration>

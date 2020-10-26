@@ -2,6 +2,7 @@ package xyz.zjhwork.dao;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import xyz.zjhwork.entity.User;
 
@@ -16,4 +17,19 @@ public interface UserDao {
     //管理员权限
     @Delete("delete from user where username = #{username}")
     int deleteUser(User user);
+    /**
+     * findById
+     * @param id id
+     * @return User
+     */
+    @Select("select * from user where id = #{id}")
+    User findById(Integer id);
+
+    /**
+     * findByUsername
+     * @param username 用户名
+     * @return User
+     */
+    @Select("select * from user where username = #{username}")
+    User findByUsername(String username);
 }

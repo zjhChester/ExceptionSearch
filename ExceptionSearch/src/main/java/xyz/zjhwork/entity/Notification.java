@@ -25,5 +25,6 @@ public class Notification implements Serializable {
     private String delStatus;
     private String createTime;
     private String modifyTime;
+    private String message;
 
 }

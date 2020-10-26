@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>个人中心</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+
+
+		<style type="text/css">
+			.load{
+				width: 100%;
+				height: 100vh;
+				position: fixed;
+				top: 0;
+				z-index: 10000;
+			//display: none;
+				background-color: rgba(0, 0, 0, 0.1);
+			}
+			.loader{
+				width: 140px;
+				height: 140px;
+				/* border: 1px solid red; */
+				text-align: center;
+				position: absolute;
+				top: calc(50% - 70px);
+				left: calc(50% - 70px);
+				padding-top: 15px;
+				background-color: rgba(0, 0, 0, 0.5);
+				border-radius: 5px;
+			}
+			#loader-1{
+				width: 60px;
+				height: 60px;
+			}
+			.load-msg{
+				height: 50px;
+				line-height: 50px;
+				color: #fff;
+				font-size: 13px;
+				/* margin-top: 20px; */
+			}
+			svg path, svg rect {
+				fill: #17a085;
+			}
+			body{
+				background: gainsboro;
+			}
+
+			.header{
+				font-weight: 800;
+				font-size: 1.5em;
+				color: white;
+				height: 40px;
+				line-height: 40px;
+			}
+			ul span{
+				font-size: 12px;
+				font-weight: 100;
+			}
+			*::-webkit-scrollbar{display: none}
+		</style>
+	</head>
+	<body>
+		<div class="header container" style="margin-top: 1%;">
+			<div class="col-xs-6 text-center">
+				<a href="/"><button class="btn btn-primary">主页</button></a>
+				<a href="/createMarkdown.html" target="_blank"><button class="btn btn-warning">写文章</button></a>
+				<button class="btn btn-info " data-toggle="modal"onclick="updateUserInfo()" data-target=".myModalUp">信息修改</button>
+			</div>
+			<div class="user col-xs-6 text-right">
+				<button  type="button" class="btn btn-default login" data-toggle="modal"onclick="login()" data-target=".myModalLogin">登录</button>
+			</div>
+		</div>
+		<div class="container" style="padding: 2%;">
+			<div class="col-xs-8 leftList">
+				<div class="col-xs-12 newList" >
+					<div class="header bg-primary text-center">
+						<span>最新发表</span>
+					</div>
+					<div class="listBodyLeft" style="background: white;overflow-y: scroll;">
+						<ul class="navbar" style="padding: 3%;list-style: inside;font-size: 1.3em;font-weight: 600;margin-left: 10%;">
+							正在加载....
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-xs-12 myList" style="margin-top: 3%;">
+					<div class="header bg-primary text-center">
+						<span>我的文章</span>
+					</div>
+					<div class="listBodyLeft" style="background: white;overflow-y: scroll;">
+						<ul class="navbar" style="padding: 3%;list-style: inside;font-size: 1.3em;font-weight: 600;margin-left: 10%;">
+							正在加载....
+
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-4 rightList" >
+				<div class="col-xs-12 userInfo">
+					<div class="header bg-primary text-center">
+						<span>用户信息</span>
+					</div>
+					<div class="listBodyRightUser" style="background: white;overflow-y: scroll;">
+						<ul class="navbar" style="list-style: none;padding: 10%;font-size: 1.2em;">
+							<li>账号：</li>
+							<li>昵称：</li>
+							<li>性别：</li>
+							<li>年龄：</li>
+							<li>邮箱：</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-xs-12 favoriteList" style="margin-top: 3%;">
+					<div class="header bg-primary text-center">
+						<span>我的收藏</span>
+					</div>
+					<div class="listBodyRight" style="background: white;overflow-y: scroll;">
+						<ul class="navbar" style="padding: 3%;list-style: inside;font-size: 1.3em;font-weight: 600;margin-left: 5%;">
+							正在加载....
+
+						</ul>
+					</div>
+				</div>
+				<div class="col-xs-12 historyList" style="margin-top: 3%;">
+					<div class="header bg-primary text-center">
+						<span>我的历史记录</span>
+					</div>
+					<div class="listBodyRightUser" style="background: white;overflow-y: scroll;">
+						<ul class="navbar" style="padding: 3%;list-style: inside;font-size: 1.3em;font-weight: 600;margin-left: 5%;">
+							正在加载....
+
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="load">
+			<div class="loader" title="2">
+				<svg version="1.1" id="loader-1"  x="0px" y="0px" width="100px" height="100px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+				<path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+				<animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite" />
+				</path>
+			</svg>
+				<div class="load-msg"> </div>
+			</div>
+		</div>
+		<!--模态框-->
+		<div class="modal fade myModalUp" style="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header" style="background:#204d74;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title myModalLabel text-center"style="color: white;"><span>信息修改</span></h4>
+					</div>
+					<div class="modal-body myModal_content">
+						<div class="form-inline text-center" style="margin-top: 5%">
+							<span>昵称：</span>
+							<input name="nickname" class="form-control"  type="text" placeholder="nickname">
+						</div>
+						<div class="form-inline text-center" style="margin-top: 5%">
+							<span>密码：</span>
+							<input name="password" class="form-control" type="password" placeholder="password">
+						</div>
+						<div class="form-inline text-center" style="margin-top: 5%">
+							<span>性别：</span>
+							<select class="gender form-control">
+								<option value="男">男</option>
+								<option value="女">女</option>
+							</select>
+						</div>
+						<div class="form-inline text-center" style="margin-top: 5%">
+							<span>年龄：</span>
+							<select  class="age form-control" >
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="cancelUp">取消</button>
+						<button type="button" class="btn btn-primary" id="myModal_enterUp" >确认修改</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade myModalLogin" style="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header" style="background:#204d74;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title myModalLabel text-center"style="color: white;"><span>用户登录</span></h4>
+					</div>
+					<div class="modal-body myModal_content">
+						<div class="form-inline text-center" style="margin-top: 5%">
+							<span>账号：</span>
+							<input name="username" class="form-control"  type="text" placeholder="username">
+						</div>
+						<div class="form-inline text-center" style="margin-top: 5%">
+							<span>密码：</span>
+							<input name="password" class="form-control" type="password" placeholder="password">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="cancelLogin">取消</button>
+						<button type="button" class="btn btn-primary" id="myModal_enterLogin" >登录</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade myModalLogout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header"style="background:#204d74;color: white">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title myModalLabel" ><span>用户退出</span></h4>
+					</div>
+					<div class="modal-body myModal_content">
+						<span>确认退出吗？</span>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="cancelExit">关闭</button>
+						<button type="button" class="btn btn-primary" id="myModal_enter">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/util.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/md5.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+        $(function(){
+            var windowHeight = Number(window.innerHeight/2);
+            $(".listBodyLeft").css("height",windowHeight-120)
+            $(".listBodyRight").css("height",windowHeight-220)
+            $(".listBodyRightUser").css("height",windowHeight-220)
+            //初始化隐藏模态框
+            $(".load").hide()
+            $(".load-msg").html("请稍后...")
+            //登录状态检查
+            createMarkdownUserStatus();
+            // //加载最新文章
+            newListLoading();
+            // //加载我的文章
+            myListLoading();
+            // //加载个人信息
+            myInfo();
+            //加载收藏
+            myFavoriteLoading();
+            //加载历史记录
+            historyLoading();
+        })
+
+
+
+
+	</script>
+</html>

@@ -46,4 +46,10 @@ public interface NotificationService {
      */
     NotificationOutputDTO getPage(HttpServletRequest request, Integer currPage, Integer pageSize);
 
+    /**
+     * 一览加载未读条数
+     * @param request http请求
+     * @return 未读条数
+     */
+     Integer getUnreadCount(HttpServletRequest request);
 }

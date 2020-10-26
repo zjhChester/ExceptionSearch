@@ -23,4 +23,5 @@ public class NotificationDTO {
     private String delStatus;
     private String createTime;
     private String modifyTime;
+    private String message;
 }

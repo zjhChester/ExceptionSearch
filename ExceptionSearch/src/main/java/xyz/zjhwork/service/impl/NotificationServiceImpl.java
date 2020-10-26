@@ -13,6 +13,7 @@ import xyz.zjhwork.dto.notification.NotificationOutputDTO;
 import xyz.zjhwork.entity.Exception;
 import xyz.zjhwork.entity.Notification;
 import xyz.zjhwork.dto.ResponseModel;
+import xyz.zjhwork.entity.User;
 import xyz.zjhwork.service.NotificationService;
 import xyz.zjhwork.utils.DateUtils;
 
@@ -30,10 +31,12 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationDao notificationDao;
     private final ExceptionDao exceptionDao;
+    private final UserServiceImpl userService;
     @Autowired
-    public NotificationServiceImpl(NotificationDao notificationDao, ExceptionDao exceptionDao) {
+    public NotificationServiceImpl(NotificationDao notificationDao, ExceptionDao exceptionDao, UserServiceImpl userService) {
         this.notificationDao = notificationDao;
         this.exceptionDao = exceptionDao;
+        this.userService = userService;
     }
 
 
@@ -81,6 +84,10 @@ public class NotificationServiceImpl implements NotificationService {
         String idsStr = String.join(",", ids);
         //指定map的大小 因为pageSize>=exceptionList的大小
         Map<Integer,Exception> exceptionHashMap= new HashMap<>(pageSize);
+        //避免没有找到数据而报sql异常
+        if("".equals(idsStr)){
+            idsStr="-1";
+        }
         //分id装入hashMap
        exceptionDao.findListByIds(idsStr).forEach(e->exceptionHashMap.put(e.getId(),e));
         //构建返回DTO对象
@@ -91,6 +98,8 @@ public class NotificationServiceImpl implements NotificationService {
             NotificationDTO notificationDTO = NotificationDTO.builder().build();
             //pojo复制到DTO
             BeanUtils.copyProperties(n,notificationDTO);
+            //将用户查询改为nickName
+            notificationDTO.setSender(userService.findByUsername(n.getSender()).getNickName());
             //ExceptionDTO 构建
             ExceptionDTO exceptionDTO = ExceptionDTO.builder().build();
             //pojo复制到DTO
@@ -101,5 +110,11 @@ public class NotificationServiceImpl implements NotificationService {
             notificationModelsDTO.add(notificationModelDTO);
         }
         return   NotificationOutputDTO.builder().totalCount(notificationDao.getCountByReceiver(request.getSession().getAttribute("loginUser").toString())).resList(notificationModelsDTO).build();
+    }
+
+    @Override
+    public Integer getUnreadCount(HttpServletRequest request) {
+
+        return notificationDao.getUnreadCountByUsername(request.getSession().getAttribute("loginUser").toString());
     }
 }

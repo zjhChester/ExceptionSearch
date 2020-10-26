@@ -24,7 +24,7 @@ import java.util.List;
  * Date:
  */
 @RestController
-@Api(tags = "FileOutPut Interfaces")
+@Api(tags = "文件导出接口 FileOutPut Interfaces")
 public class FileController {
     private final FileService fileService;
     private final ExceptionService exceptionService;

@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@Api(tags = "Comment Service Interfaces")
+@Api(tags = "评论接口  Comment Service Interfaces")
 public class CommentController {
     private final OtherService otherService;
     private final NotificationService notificationService;
@@ -56,6 +56,7 @@ public class CommentController {
                         receiver(exceptionService.findExceptionById(id).getAuthor()).
                         sender(request.getSession().getAttribute("loginUser").toString()).
                         type(NotificationType.COMMENT.toString()).
+                        message(comment.getContent()).
                         build();
                 notificationService.create(notification);
                 return 1;
