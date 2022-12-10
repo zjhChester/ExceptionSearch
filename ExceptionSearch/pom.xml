@@ -44,7 +44,7 @@
     <artifactId>exceptionSearch</artifactId>
     <version>20200917</version>
     <properties>
-        <spring.version>5.2.6.RELEASE</spring.version>
+        <spring.version>6.0.0</spring.version>
         <tomcat.version>8.5.56</tomcat.version>
     </properties>
     <dependencies>
